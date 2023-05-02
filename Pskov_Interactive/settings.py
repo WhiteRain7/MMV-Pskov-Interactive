@@ -25,7 +25,9 @@ SECRET_KEY = '79ee30ef-62c4-41af-85af-ec8c30956f9a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'http://whiterain7.pythonanywhere.com/'
+]
 
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
