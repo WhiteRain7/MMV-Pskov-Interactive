@@ -26,7 +26,7 @@ SECRET_KEY = '79ee30ef-62c4-41af-85af-ec8c30956f9a'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'http://whiterain7.pythonanywhere.com/'
+    'whiterain7.pythonanywhere.com'
 ]
 
 # Application references
