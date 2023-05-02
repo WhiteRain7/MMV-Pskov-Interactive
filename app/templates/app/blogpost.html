@@ -1,0 +1,72 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/content/blogpost.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+
+<article id="post">
+    <div id="prelude">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        {% if post_1.image and post_1.image.url != '/media/temp.jpg' %}
+                        <img src="{{ post_1.image.url }}" alt="Картинка статьи" width="300px" />
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/posts/{{ post_1.about.tag }}" role="menuitem" style="background-color: {{ post_1.about.tag_colour }};">
+                            <span>#{{ post_1.about.tag }}</span>
+                        </a>
+                        <a href="." role="menuitem" style="background-color: {{ post_1.extra_tag_colour }};">
+                            <span>#{{ post_1.extra_tag }}</span>
+                        </a>
+                        <h1>{{ post_1.title }}</h1>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="interlude">
+        <p>{{ post_1.content|linebreaksbr }}</p>
+    </div>
+    
+    <div id="afterlude">
+        <input type="button" role="link" class="click-btn" onclick="window.history.back()" value="назад" />
+    </div>
+</article>
+
+<div id="new_comment">
+    {% if user.is_authenticated %}
+    <h1>Добавить комментарий</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            {{ form.text }}
+            <br />
+            <input type="submit" class="click-btn" value="прокомментировать">
+        </div>
+    </form>
+    {% else %}
+    <h1> Для добавления своего комментария, пожалуйста, авторизуйтесь </h1>
+    {% endif %}
+</div>
+
+<div id="comments">
+    <h1>Комментарии</h1>
+    {% for comment in comments %}
+    <div {% if comment.author == user %}class='own-comment'{% endif %}>
+        <label>{{ comment.date }}</label>
+        <h1>{{ comment.author }}</h1>
+        <p>{{ comment.text|linebreaksbr }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

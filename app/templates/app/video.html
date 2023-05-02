@@ -1,0 +1,24 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/content/video.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+
+<section class="video_sec">
+    <h1>Pskov Interactive</h1>
+    {% load staticfiles %}
+    <video src="{% static 'app/content/PI.mp4' %}" controls="controls"></video>
+</section>
+
+<section class="video_sec">
+    <h1>Rise of South</h1>
+    {% load staticfiles %}
+    <video src="{% static 'app/content/RoS.mp4' %}" controls="controls"></video>
+</section>
+
+{% endblock %}

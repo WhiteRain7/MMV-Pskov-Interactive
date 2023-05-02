@@ -1,0 +1,27 @@
+<header role="banner" id='site-header'>
+    <nav role="menu">
+        <a role="menuitem" id="site-menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 96 960 960"><path d="M115.935 822.696v-68.131h728.13v68.131h-728.13Zm0-212.631v-68.13h728.13v68.13h-728.13Zm0-212.63v-68.37h728.13v68.37h-728.13Z"/></svg>
+        </a>
+        {% load staticfiles %}
+        <a role="menuitem" {% if page == 'homep' %}now{% endif %} href="{% url 'home' %}">
+            <img src="{% static 'app/content/favicon-192x192px.png' %}" role='link' width='48px' height='48px' alt='PI logo' title="Pskov Interactive">
+        </a>
+        <a role="menuitem" {% if page == 'homep' %}now{% endif %} href="{% url 'home' %}"><span>Домашняя страница</span></a>
+        <a role="menuitem" {% if page == 'about' %}now{% endif %} href="{% url 'about' %}"><span>О нас</span></a>
+        <a role="menuitem" {% if page == 'links' %}now{% endif %} href="{% url 'contact' %}"><span>Контакты</span></a>
+        <a role="menuitem" {% if page == 'video' %}now{% endif %} href="{% url 'video' %}"><span>Видео</span></a>
+        <a role="menuitem" {% if page == 'posts' %}now{% endif %} href="{% url 'posts' %}"><span>Статьи</span></a>
+        {% if user.is_superuser %}
+        <a role="menuitem" {% if page == 'npost' %}now{% endif %} href="{% url 'newpost' %}"><span>Добавить статью</span></a>
+        {% endif %}
+        <a role="menuitem" {% if page == 'fdbck' %}now{% endif %} href="{% url 'feedback' %}"><span>Отзыв</span></a>
+        <canvas id="nav-delimiter" width="90px" height="100%"></canvas>
+    </nav>
+
+    <div id="login-block">
+        {% include 'app/blocks/loginpartial.html' %}
+        {% if not user.is_authenticated %}
+        {% endif %}
+    </div>
+</header>

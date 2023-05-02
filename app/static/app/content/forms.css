@@ -1,0 +1,99 @@
+/* any forms */
+
+.input_form {
+    width: 60%;
+    min-width: 256px;
+    max-width: 600px;
+    height: fit-content;
+    margin: 50px auto;
+    padding: 10px 15px;
+    border: 2px solid var(--clr-text);
+    border-radius: 20px;
+}
+
+.input_form h4 {
+    font-size: 140%;
+    cursor: default;
+}
+
+.form-group {
+    margin: 20px 0 0 0;
+}
+
+.form-group input[type='text'],
+.form-group input[type='email'],
+.form-group input[type='password'],
+.form-group input[type='number'],
+.form-group input[type='file'],
+.form-group select,
+.form-group textarea {
+    padding: 4px;
+    border: 1px dashed var(--clr-text);
+    border-radius: 8px;
+    background-color: transparent;
+    transition: .25s;
+}
+
+.form-group textarea {
+    resize: none;
+}
+
+.form-group input[type='text']:hover,
+.form-group input[type='email']:hover,
+.form-group input[type='password']:hover,
+.form-group input[type='number']:hover,
+.form-group input[type='file']:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border: 1px solid var(--clr-text) !important;
+    background-color: var(--clr-semiback) !important;
+}
+
+.form-group input[type='text']:focus,
+.form-group input[type='email']:focus,
+.form-group input[type='password']:focus,
+.form-group input[type='number']:focus,
+.form-group input[type='file']:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    background-color: var(--clr-semiback) !important;
+}
+
+.form-group input[type='text']:not(:placeholder-shown),
+.form-group input[type='email']:not(:placeholder-shown),
+.form-group input[type='password']:not(:placeholder-shown),
+.form-group input[type='number']:not(:placeholder-shown),
+.form-group select:not(:has(option[value='-1']:checked)),
+.form-group input[type='file']:not(:empty),
+.form-group textarea:not(:placeholder-shown) {
+    border: 1px solid var(--clr-text) !important;
+    background-color: var(--clr-highlighted) !important;
+}
+
+.form-group input[type='checkbox'] {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    accent-color: var(--clr-highlighted);
+    transition: .25s;
+}
+.form-group input[type='checkbox']:hover {
+    border: 1px solid var(--clr-text) !important;
+    background-color: var(--clr-semiback) !important;
+}
+
+.form-group input[type='file']::file-selector-button {
+    display: none;
+}
+
+.form-warning svg {
+    fill: var(--clr-warning);
+    vertical-align: middle;
+}
+.form-warning p {
+    display: inline;
+    height: var(--svg-inline-size);
+    line-height: var(--svg-inline-size);
+    color: var(--clr-warning);
+    vertical-align: middle;
+}

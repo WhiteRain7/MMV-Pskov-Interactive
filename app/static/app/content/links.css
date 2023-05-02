@@ -1,0 +1,27 @@
+/* links.html */
+
+.other_sec {
+    max-width: 800px;
+    margin: 30px 10px 30px 30px;
+    padding: 10px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 5px solid;
+    border-radius: 10px 0 0 10px;
+    background: linear-gradient(to right, var(--clr-semiback), transparent 80%);
+}
+
+.other_sec > * {
+    max-width: 600px;
+    background: inherit;
+}
+
+.other_sec > a {
+    font-size: 120%;
+    text-decoration: none;
+    transition: .25s;
+}
+
+.other_sec > a:hover {
+    text-shadow: 0 0 10px var(--clr-text);
+}

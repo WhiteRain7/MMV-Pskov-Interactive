@@ -1,0 +1,107 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/content/index.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+
+<section id="company_sec">
+    <div id="CS-logo">
+        {% load staticfiles %}
+        <img src="{% static 'app/content/favicon-192x192px.png' %}" role='link' width='192px' height='192px' alt='PI logo' title="Pskov Interactive">
+    </div>
+    <div id="CS-text">
+        <h1>Pskov Inter<wbr>active</h1>
+        <p>Компания по разработке компьютерных игр в жанре "стратегии"</p>
+    </div>
+    <div id="CS-games" role="menu">
+        {% for game in games %}
+        <div role="menuitem" title="{{ game.name }}">
+            <a href="/posts/{{ game.tag }}" role="link">
+                <img src="{{ game.image.url }}" alt="{{ game.tag }}" role="figure" width="80px" height="80px" />
+                <label>{{ game.name }}</label>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="carousel_sec" role="marquee">
+    <div id="carousel">
+        <div id="carousel-left" onclick="carousel_left()"><span>«</span></div>
+        <div id="carousel-content">
+            {% for blog in blogs %}
+            <div role="figure" style="display: none">
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" />
+                <label>{{ blog.title }}</label>
+                <a href="/blogpost/{{ blog.id }}">далее »</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="carousel-right" onclick="carousel_right()"><span>»</span></div>
+    </div>
+</section>
+
+<section id="more_sec-static" role="marquee">
+    <div class="text-block">
+        <h1>Кто мы</h1>
+        <hr />
+        <p>Мы - компания Pskov Interactive, которая занимается разработкой игр в жанре стратегий разных жанров - от военных пошаговых симуляторов до глобальных в реальном времени с управлением государствами разных эпох.</p>
+        <hr />
+        <p>У нас не большая, но амбициозная команда профессионалов, любящих свою работу, а также жанр стратегий в компьютерных играх. Потому мы с полной уверенностью готовы представить вам несколько несколько своих продуктов, а также рассказать о будущих.</p>
+        <hr />
+        <p>Подробнее о нашей компании можно узнать в специальном разделе "о нас".</p>
+        <hr />
+        <a href="/about">
+            <input type="button" class="click-btn" value="подробнее о нас">
+        </a>
+    </div>
+</section>
+
+<section id="more_sec-right" role="marquee">
+    <div class="text-block">
+        <h1>Новости разработки</h1>
+        <hr />
+        <p>У нас есть собственная лента новостей, посвящённая процессу разработки наших игр, интересным материалам по ним, а также прочих других вещах.</p>
+        <hr />
+        <p>На данный момент в разработке находится 3 разных стратегии - Holy Roman Empire, Terraforming Mars и Rise of South, каждая из которых достойна вашего внимания! Мы уверены, что вам понравятся все эти игры, а также наши новости по ним.</p>
+        <hr />
+        <a href="/posts">
+            <input type="button" class="click-btn" value="наши новости">
+        </a>
+    </div>
+
+    <div class="text-block">
+        <h1>Rise of South - на пути к бета тесту</h1>
+        <hr />
+        <p>Если вы активно следите за новостями по игре Rise of South, то новая новость вам определённо понравится - мы скоро откроем бета-тестирование!</p>
+        <hr />
+        <p>Все подробности в нашей ленте новостей.</p>
+        <hr />
+        <a href="/blogpost/3">
+            <input type="button" class="click-btn" value="Новость о RoS">
+        </a>
+    </div>
+</section>
+
+<section id="more_sec-left" role="marquee">
+    <div class="text-block">
+        <h1>Отзывы</h1>
+        <hr />
+        <p>Помните, что вы всегда можете оставлять свои отзывы по нашим играм в специальном разделе.</p>
+        <hr />
+        <p>Отзыв можно оставить не только по выпущенным играм, и тем более не обязательно иметь к ним доступ - мы также принимаем любые ваши пожелания и предложения, которые мы обязательно постараемся учесть при разработке.</p>
+        <hr />
+        <p>Если у вас есть хорошие идеи и вы хотите сделать наш проект лучше - напишите об этом прямо сейчас!</p>
+        <hr />
+        <a href="/feedback">
+            <input type="button" class="click-btn" value="оставить отзыв">
+        </a>
+    </div>
+</section>
+
+{% endblock %}

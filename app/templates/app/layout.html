@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Сайт компании {{ company_title }}, выпускающей компьютерные игры и новости по ним." />
+    <meta name="keywords" content="компьютерные игры, стратегии" />
+    <meta name="author" content="Макаров М.В." />
+
+    <title>Pskov Interactive - {{ page_title }}</title>
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'app/content/favicon-192x192px.png' %}" />
+    {% block links %}{% endblock %}
+
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+    <script src="{% static 'app/scripts/site.js' %}"></script>
+</head>
+
+<body>
+    {% include 'app/blocks/header.html' %}
+
+    <main role="main" id="MAIN">
+        {% block content %}
+        <aside role="complementary">
+            <p>Здесь ничего нет. Возможно, Вы неправильно указали адрес ссылки.</p>
+            <a href="{% url 'home' %}">Вернуться на главную</a>
+        </aside>
+        {% endblock %}
+    </main>
+
+    {% include 'app/blocks/footer.html' %}
+
+    <!-- scripts -->
+
+    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

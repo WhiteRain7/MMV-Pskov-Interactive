@@ -1,0 +1,19 @@
+{% if user.is_authenticated %}
+
+<div>
+    <label style="display: inline-block;">{{ user.username }}</label>
+    <img src="/static/app/base_icons/unknown_{{ randint }}.png" alt="" width="36px" height="36px"/>
+</div>
+<form id="logoutForm" action="/logout/" method="post" class="navbar-right">
+    {% csrf_token %}
+    <input type="submit" class="click-btn" value="выйти" onclick="document.getElementById('to_login').click()" />
+</form>
+
+{% else %}
+
+<input role="link" type="button" class="click-btn" value="войти" onclick="document.getElementById('to_login').click()" style="margin-right: 10px" />
+<a id="to_login" href="{% url 'login' %}" class="hidden"></a>
+<input role="link" type="button" class="click-btn" value="регистрация" onclick="document.getElementById('to_reg').click()" />
+<a id="to_reg" href="{% url 'registration' %}" class="hidden"></a>
+
+{% endif %}
