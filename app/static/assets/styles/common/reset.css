@@ -1,0 +1,47 @@
+* {
+    font: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    font-style: inherit;
+
+    margin: 0;
+    padding: 0;
+
+    background-color: inherit;
+    color: inherit;
+    fill: inherit;
+
+    border: none;
+}
+
+html {
+    width: 100vw;
+
+    background: var(--colour-backdrop);
+    color: var(--colour-front);
+    fill: var(--colour-front);
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.serif-styled {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.hidden { display: none !important }
+b, strong { font-weight: bold }
+i, em { font-style: italic }
+
+:disabled, [disabled] {
+    opacity: .5;
+    cursor: default !important;
+}
+
+abbr {
+    text-decoration: none;
+    cursor: help;
+}

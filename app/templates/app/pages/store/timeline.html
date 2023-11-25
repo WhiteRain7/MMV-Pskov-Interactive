@@ -1,0 +1,60 @@
+<table class="timeline-table">
+    <colgroup>
+        {% for era in timeline.timeline %}
+        <col style="width: {{ era.width }};" />
+        {% endfor %}
+    </colgroup>
+
+    <tbody>
+        <tr>
+            <td colspan="666" class="timeline-navigator">
+                <time
+                    datetime="{{ timeline.start.year }}-01-01T00:00:00"
+                    style="
+                        --local-left: {{ timeline.start.pos }};
+                        --local-top: {{ timeline.start.top }};
+                        --local-colour: {{ timeline.start.era.hex }};
+                    ">
+                
+                    {{ timeline.start.year }}
+                </time>
+
+                <span
+                    style="
+                        --local-left: {{ timeline.start.pos }};
+                        --local-right: {{ timeline.end.pos }};
+
+                        --local-top: {{ timeline.start.top }};
+                        --local-bottom: {{ timeline.end.top }};
+                    ">
+                </span>
+
+                <time
+                    datetime="{{ timeline.end.year }}-01-01T00:00:00"
+                    style="
+                        --local-left: {{ timeline.end.pos }};
+                        --local-top: {{ timeline.end.top }};
+                        --local-colour: {{ timeline.end.era.hex }};
+                    ">
+                
+                    {{ timeline.end.year }}
+                </time>
+            </td>
+        </tr>
+
+        <tr class="timeline-row">
+            {% for era in timeline.timeline %}
+            <td
+                style="--local-colour: {{ era.hex }};"
+                class="timeline-{{ era.name }} {% if era.included %}included{% endif %}">
+            
+                {% if era.year is not None %}
+                <time datetime="{{ era.year }}-01-01T00:00:00">{{ era.year }}</time>
+                {% endif %}
+
+                <dfn>{{ era.human }}</dfn>
+            </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>

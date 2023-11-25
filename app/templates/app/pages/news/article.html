@@ -1,0 +1,81 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/styles/article.css' %}" />
+
+{% endblock %}
+
+{% block content %}
+
+<article id="article" class="regular-block">
+    <header id="article-header">
+        <table>
+            <tbody>
+                <tr id="article-head">
+                    {% if article.image and article.image.url != '/media/temp.jpg' %}
+                    <td>
+                        <figure id="article-figure">
+                            <img src="{{ article.image.url }}" alt="Изображение статьи" />
+                        </figure>
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        <a href="/news/{{ article.about.tag }}" style="background: {{ article.about.colour }};" class="article-tag">
+                            #{{ article.about.tag }}
+                        </a>
+                        <a href="/news/{{ article.tag.tag }}" style="background: {{ article.tag.colour }};" class="article-tag">
+                            #{{ article.tag.tag }}
+                        </a>
+
+                        <h1 id="article-title">{{ article.title }}</h1>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </header>
+
+    <section id="article-body">
+        <p>{{ article.content|linebreaksbr }}</p>
+    </section>
+    
+    <footer id="article-footer">
+        <a href="/news" class="inline-button">назад</a>
+    </footer>
+</article>
+
+<section id="new_comment" class="regular-block">
+    {% if user.is_authenticated %}
+    <form method="POST" action="/news/comment/{{ article.id }}" target="_self">
+        {% csrf_token %}
+        <div>
+            {{ form.text }}
+            <br />
+            <input type="submit" class="standalone-button" value="оставить комментарий">
+        </div>
+    </form>
+    {% else %}
+    <i> Для добавления своего комментария, пожалуйста, авторизуйтесь </i>
+    {% endif %}
+</section>
+
+{% if comments %}
+<div id="comments" class="regular-block">
+    <h2>Комментарии</h2>
+
+    {% for comment in comments %}
+    <section class="article-comment {% if comment.author == user %}own-comment{% endif %}" role="comment">
+        <h3>
+            <img src="{{ comment.author.photo.url }}" alt="{{ comment.author }}" width="28" height="28" aria-hidden="true" />
+            {{ comment.author }}
+        </h3>
+        <p>{{ comment.text|linebreaksbr }}</p>
+        <time datetime="{{ comment.date }}">{{ comment.date }}</time>
+    </section>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,198 @@
+/* about.html */
+
+#about-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 20px 30px;
+    padding: 40px;
+}
+
+.about-container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 20px;
+    width: 600px;
+    max-width: 800px;
+}
+
+.about-section {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid var(--colour-contrast-decoration-back);
+    background: var(--colour-back);
+}
+
+.about-section > h1 {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    font-size: 130%;
+    font-weight: bold;
+    position: relative;
+}
+.about-section > h1 > span {
+    padding-inline: 6px;
+    background: var(--colour-back);
+    color: var(--colour-contrast-decoration-back);
+    cursor: default;
+    position: relative;
+    z-index: 1;
+}
+.about-section > h1::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 60%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--colour-contrast-decoration-back);
+    z-index: 0;
+}
+
+.about-section > p {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.about-address {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.address-link {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    max-width: 400px;
+    height: 32px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.address-link > strong {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    width: 110px;
+    height: 32px;
+    padding-inline: 8px;
+    background: var(--colour-contrast-decoration-back);
+    color: var(--colour-contrast-decoration-front);
+    cursor: default;
+    position: relative;
+    z-index: 1;
+}
+.address-link > strong::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(100% - 8px);
+    width: 16px;
+    height: 32px;
+    transform: skewX(-20deg);
+    background: inherit;
+}
+
+.address-link > a {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    width: 120px;
+    height: 32px;
+    padding-inline: 8px;
+    padding-left: 18px;
+    background: var(--colour-pale-decoration-back);
+    color: var(--colour-pale-decoration-front);
+    text-decoration: none;
+    cursor: pointer;
+    transition: .25s;
+    position: relative;
+}
+.address-link > a:hover {
+    background: var(--colour-contrast-decoration-back);
+    color: var(--colour-contrast-decoration-front);
+}
+.address-link > a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(100% - 8px);
+    width: 16px;
+    height: 32px;
+    transform: skewX(-20deg);
+    background: inherit;
+}
+
+
+.internal-link > strong {
+    background: var(--colour-contrast-positive-back);
+    color: var(--colour-contrast-positive-front);
+}
+.internal-link > a {
+    background: var(--colour-pale-positive-back);
+    color: var(--colour-pale-positive-front);
+}
+.internal-link > a:hover {
+    background: var(--colour-contrast-positive-back);
+    color: var(--colour-contrast-positive-front);
+}
+
+
+.development-link > strong {
+    background: var(--colour-contrast-negative-back);
+    color: var(--colour-contrast-negative-front);
+}
+.development-link > a {
+    background: var(--colour-pale-negative-back);
+    color: var(--colour-pale-negative-front);
+}
+.development-link > a:hover {
+    background: var(--colour-contrast-negative-back);
+    color: var(--colour-contrast-negative-front);
+}
+
+
+@media screen and (max-width: 600px) {
+    #about-body {
+        padding: 10px;
+    }
+
+    .address-link {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+
+    .address-link > strong {
+        width: 100%;
+    }
+
+    .address-link > a {
+        width: calc(100% - 20px);
+        padding-left: 8px;
+    }
+}

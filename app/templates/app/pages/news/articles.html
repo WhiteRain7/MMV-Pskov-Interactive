@@ -1,0 +1,105 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/articles.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/articles.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <section id="section-article-tags">
+        <p class="article-tag article-unifying">Игры</p>
+        {% for tag in game_tags %}
+        {% if tag.tag == filter_tag %}
+        <a
+            href="/news"
+            style="background: {{ tag.colour }};"
+            class="article-tag selected">
+            
+            #{{ tag.tag }}
+        </a>
+        {% else %}
+        <a
+            href="/news/{{ tag.tag }}"
+            style="background: {{ tag.colour }};"
+            class="article-tag">
+            
+            #{{ tag.tag }}
+        </a>
+        {% endif %}
+        {% endfor %}
+
+        <p class="article-tag article-unifying">Разделы</p>
+        {% for tag in extra_tags %}
+        {% if tag.tag == filter_tag %}
+        <a
+            href="/news"
+            style="background: {{ tag.colour }};"
+            class="article-tag selected">
+            
+            #{{ tag.tag }}
+        </a>
+        {% else %}
+        <a
+            href="/news/{{ tag.tag }}"
+            style="background: {{ tag.colour }};"
+            class="article-tag">
+            
+            #{{ tag.tag }}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </section>
+
+    <section id='articles'>
+        <button type="button" id="articles-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+
+        {% if not articles %}
+        <section id="section-no-articles">
+            <p>Ничего не найдено</p>
+            <p>Возможно, вы выбрали некорректный тег - попробуйте ещё раз через специальное меню, либо:</p>
+            <a class="inline-button contrast-extra" href="/news">вывести все новости</a>
+        </section>
+        {% endif %}
+
+        {% for article in articles %}
+        <article class="article-block">
+            <div class="article-tags">
+                <a
+                    href="/news/{{ article.about.tag }}"
+                    style="background: {{ article.about.colour }};"
+                    class="article-tag">
+                    
+                    #{{ article.about.tag }}
+                </a>
+
+                {% if article.tag %}
+                <a
+                    href="/news/{{ article.tag.tag }}"
+                    style="background: {{ article.tag.colour }};"
+                    class="article-tag">
+                    
+                    #{{ article.tag.tag }}
+                </a>
+                {% endif %}
+            </div>
+
+            <img src="{{ article.image.url }}" alt="" class="article-image">
+
+            <time datetime="{{ article.posted }}" class="article-time">{{ article.posted }}</time>
+            <h1 class="article-title">{{ article.title }}</h1>
+            <p class="article-description">
+                {{ article.content }}
+                <span class="article-pale"></span>
+            </p>
+            <a href="/news/article/{{ article.id }}" class="article-read">читать далее »</a>
+        </article>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,198 @@
+#form-container {
+    box-sizing: border-box;
+    width: 90%;
+    max-width: 600px;
+    padding: 10px;
+    margin: auto;
+    border: 2px solid var(--colour-contrast-decoration-back);
+    border-radius: 20px;
+}
+
+#form-title {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(10deg, var(--colour-contrast-decoration-back) 30%, var(--colour-contrast-positive-back));
+    color: var(--colour-contrast-decoration-front);
+    font-size: 140%;
+    cursor: default;
+}
+
+#form-fields {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    padding-block: 30px;
+    margin-block: 10px;
+    position: relative;
+}
+#form-fields::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 14px);
+    height: 3px;
+    border-radius: 666px;
+    background: var(--colour-contrast-decoration-back);
+}
+#form-fields::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 30px);
+    height: 3px;
+    border-radius: 666px;
+    background: var(--colour-contrast-decoration-back);
+}
+
+.form-fieldset {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: calc(100% - 60px);
+    border: none;
+    break-inside: avoid;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+}
+.form-field-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    padding: 6px 14px;
+    border: 1px solid var(--colour-contrast-decoration-back);
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: .5s;
+}
+.form-field > :is(input, select, textarea, .form-field-image) {
+    display: flex;
+    flex-grow: 1;
+    width: 140px;
+    padding: 6px 14px;
+    border: 1px solid var(--colour-contrast-decoration-back);
+    border-radius: 20px;
+    text-align: left;
+    transition: .5s;
+}
+.form-field:hover > :is(.form-field-label, input, select, textarea, .form-field-image) {
+    background: var(--colour-element);
+}
+
+.form-field > :is(input, select, textarea):valid ~ .form-field-label {
+    background: var(--colour-contrast-decoration-back) !important;
+    color: var(--colour-contrast-decoration-front) !important;
+}
+
+
+#form-errors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    width: 90%;
+    padding: 6px 14px 6px 6px;
+    margin: 10px auto;
+    border-radius: 20px;
+    background: var(--colour-contrast-negative-back);
+    color: var(--colour-contrast-negative-front);
+    fill: var(--colour-contrast-negative-front);
+    overflow: hidden;
+    cursor: default;
+    animation: shaking .6s forwards;
+}
+
+@keyframes shaking {
+    0% { transform: translateX(0) }
+    10% { transform: translateX(5px) }
+    20% { transform: translateX(-10px) }
+    30% { transform: translateX(12px) }
+    40% { transform: translateX(-8px) }
+    50% { transform: translateX(6px) }
+    60% { transform: translateX(-10px) }
+    70% { transform: translateX(4px) }
+    80% { transform: translateX(-10px) }
+    90% { transform: translateX(4px) }
+    100% { transform: translateX(0) }
+}
+
+
+
+.image-field > input {
+    display: none !important;
+}
+
+.form-field-image {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.form-field-image {
+    fill: var(--colour-pale);
+    color: var(--colour-pale);
+}
+
+.form-field-image svg {
+    margin: -4px;
+}
+
+.form-field-image-loaded {
+    display: none;
+}
+
+.image-field > input.loaded ~ .form-field-image > .form-field-image-load {
+    display: none;
+}
+.image-field > input.loaded ~ .form-field-image > .form-field-image-loaded {
+    display: block;
+}
+
+.image-field > input.loaded ~ .form-field-image {
+    fill: var(--colour-front);
+    color: var(--colour-front);
+}
+
+.form-field.image-field > input ~ .form-field-label {
+    background: var(--colour-back) !important;
+    color: var(--colour-front) !important;
+}
+
+.form-field.image-field > input.loaded ~ .form-field-label {
+    background: var(--colour-contrast-decoration-back) !important;
+    color: var(--colour-contrast-decoration-front) !important;
+}
+
+.form-field.image-field:hover > .form-field-label {
+    background: var(--colour-element) !important;
+}

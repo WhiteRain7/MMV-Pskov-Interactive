@@ -1,0 +1,160 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/store.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/store.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- <section id="section-article-tags">
+        <p class="article-tag article-unifying">Игры</p>
+        {% for tag in game_tags %}
+        {% if tag.tag == filter_tag %}
+        <a
+            href="/news"
+            style="background: {{ tag.colour }};"
+            class="article-tag selected">
+            
+            #{{ tag.tag }}
+        </a>
+        {% else %}
+        <a
+            href="/news/{{ tag.tag }}"
+            style="background: {{ tag.colour }};"
+            class="article-tag">
+            
+            #{{ tag.tag }}
+        </a>
+        {% endif %}
+        {% endfor %}
+
+        <p class="article-tag article-unifying">Разделы</p>
+        {% for tag in extra_tags %}
+        {% if tag.tag == filter_tag %}
+        <a
+            href="/news"
+            style="background: {{ tag.colour }};"
+            class="article-tag selected">
+            
+            #{{ tag.tag }}
+        </a>
+        {% else %}
+        <a
+            href="/news/{{ tag.tag }}"
+            style="background: {{ tag.colour }};"
+            class="article-tag">
+            
+            #{{ tag.tag }}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </section> -->
+
+    <section id='store'>
+        <button type="button" id="store-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+
+        {% if not games %}
+        <section id="section-no-games">
+            <p>Ничего не найдено</p>
+            <p>Возможно, вы выбрали некорректный тег - попробуйте ещё раз через специальное меню, либо:</p>
+            <a class="inline-button contrast-extra" href="/store">вывести все игры</a>
+        </section>
+        {% endif %}
+
+        {% for game in games %}
+        {% if game.is_visible %}
+        <div class="store-game-group">
+            <section class="store-item store-game" itemscope itemtype="http://schema.org/Game">
+                <img src="{{ game.image.url }}" alt="{{ game.name }}" class="store-image" itemprop="image" />
+
+                <div class="store-info">
+                    <h1 class="store-title" title="{{ game.name }}" itemprop="name">
+                        {{ game.name }}
+                        <div class="store-point-delimiter"></div>
+                        <span class="store-status">{{ game.status }}</span>
+                    </h1>
+
+                    <p itemprop="description" class="store-description">{{ game.description|linebreaksbr }}</p>
+
+                    <table class="store-details" itemprop="description">
+                        <thead><tr><th>Место действия:   </th> <th>Период:            </th></tr></thead>
+                        <tbody><tr><td>{{ game.theatre }}</td> <td>{{ game.timeline }}</td></tr></tbody>
+                    </table>
+
+                    {% include './timeline.html' with timeline=game.timeline_data %}
+
+                    <div class="store-empty"></div>
+
+                    {% if game.is_purchasable %}
+                    <div class="store-price-block" itemprop="offers">
+                        <data value="{{ game.price }}" class="store-price" itemprop="price">{{ game.price }} ₽</data>
+                        <button type="button" class="inline-button store-buy">Купить</button>
+                        <button type="button" class="inline-button store-cancel">Убрать</button>
+                    </div>
+                    {% elif game.is_visible %}
+                    <div class="store-price-block" itemprop="offers">
+                        <data value="0" class="store-price">скоро</data>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            {% for DLC in game.DLCs %}
+            <section class="store-item store-DLC">
+                <img src="{{ DLC.image.url }}" alt="{{ DLC.name }}" class="store-image" />
+                <div class="store-info">
+                    <h1 class="store-title" title="{{ DLC.name }}">
+                        {{ DLC.name }}
+                        <div class="store-point-delimiter"></div>
+                        <span class="store-status">DLC</span>
+                    </h1>
+
+                    <table class="store-details">
+                        <tbody><tr><td style="color: {{ DLC.about.colour }}">дополнение к "{{ DLC.about.name }}"</td></tr></tbody>
+                    </table>
+    
+                    <p class="store-description">{{ DLC.content|linebreaksbr }}</p>
+    
+                    <div class="store-price-block" itemprop="offers">
+                        <data value="{{ game.price }}" class="store-price" itemprop="price">{{ DLC.price }} ₽</data>
+                        <button type="button" class="inline-button store-buy">Купить</button>
+                        <button type="button" class="inline-button store-cancel">Убрать</button>
+                    </div>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <div class="store-accessory-group">
+        {% for acc in accessories %}
+        <section class="store-item store-accessory">
+            <img src="{{ acc.image.url }}" alt="{{ acc.name }}" class="store-image" />
+            <div class="store-info">
+                <h1 class="store-title" title="{{ acc.name }}">{{ acc.name }}</h1>
+
+                <table class="store-details">
+                    <tbody><tr><td style="color: {{ acc.tag.colour }}">{{ acc.tag.tag }}</td></tr></tbody>
+                </table>
+
+                <p class="store-description">{{ acc.content|linebreaksbr }}</p>
+
+                <div class="store-price-block" itemprop="offers">
+                    <data value="{{ game.price }}" class="store-price" itemprop="price">{{ acc.price }} ₽</data>
+                    <button type="button" class="inline-button store-buy">Купить</button>
+                    <button type="button" class="inline-button store-cancel">Убрать</button>
+                </div>
+            </div>
+        </section>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

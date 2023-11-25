@@ -1,0 +1,231 @@
+#article {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: var(--clr-semiback);
+}
+
+#article-header, #article-body, #article-footer {
+    width: 100%;
+}
+
+#article-header table {
+    border-collapse: collapse;
+}
+
+#article-header td {
+    vertical-align: top;
+}
+
+#article-header td:last-child {
+    padding: 10px;
+}
+
+#article-figure {
+    border-radius: 20px;
+    overflow: hidden;
+}
+#article-figure > img {
+    width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    object-position: center;
+}
+
+#article-title {
+    font-size: 300%;
+    vertical-align: top;
+    cursor: default;
+}
+
+.article-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border: 1px solid #FFFFFF;
+    border-radius: 666px;
+    background: #666;
+    color: #FFF;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 #000;
+    opacity: .9;
+    cursor: pointer;
+    transition: .25s;
+    z-index: 10;
+}
+
+.article-tag:hover {
+    filter: brightness(1.1);
+}
+.article-tag:active {
+    filter: brightness(.9);
+}
+
+
+#article-body {
+    padding: 20px 0;
+    margin: 10px 0;
+    border-top: 2px solid var(--colour-contrast-decoration-back);
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    border-radius: 2px;
+    font-size: 120%;
+}
+
+
+#new_comment {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+#new_comment textarea {
+    resize: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--colour-element);
+    color: var(--colour-text);
+    transition: .25s;
+    position: relative;
+}
+#new_comment textarea:hover, #new_comment textarea:focus {
+    background: var(--colour-back);
+    box-shadow: 0 0 4px 0 #888;
+    outline: none;
+}
+#new_comment textarea::placeholder {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+#comments {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: var(--clr-semiback);
+}
+
+#comments h2 {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(10deg, var(--colour-contrast-decoration-back) 30%, var(--colour-contrast-positive-back));
+    color: var(--colour-contrast-decoration-front);
+    font-size: 140%;
+    cursor: default;
+}
+
+.article-comment {
+    width: 90%;
+    margin: 10px auto 0 auto;
+    border-radius: 10px;
+    background: var(--colour-pale-decoration-back);
+    color: var(--colour-pale-decoration-front);
+}
+
+.article-comment > h3 {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 8px;
+    border-radius: 10px 10px 0 0;
+    background: var(--colour-contrast-decoration-back);
+    color: var(--colour-contrast-decoration-front);
+    text-align: left;
+    font-weight: bold;
+    position: relative;
+}
+
+.article-comment > h3 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+}
+
+.article-comment > h3 > img {
+    display: inline-block;
+    border-radius: 6px;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.article-comment > p {
+    box-sizing: border-box;
+    width: 100%;
+    padding-inline: 10px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.article-comment > time {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 4px 8px;
+    color: var(--colour-front);
+    opacity: .5;
+    font-size: 80%;
+    text-align: right;
+    cursor: default;
+    user-select: none;
+}
+
+
+.own-comment > h3::before {
+    content: '';
+    position: absolute;
+    right: calc(100% + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 666px;
+    background: var(--colour-contrast-decoration-back);
+}
+
+
+@media screen and (max-width: 800px) {
+    #article-head {
+        display: block;
+    }
+    #article-head > td {
+        display: block;
+    }
+    #article-figure {
+        width: 100%;
+    }
+    #article-figure > img {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #article-title {
+        font-size: 200%;
+    }
+
+    .article-comment {
+        width: 100%;
+    }
+}

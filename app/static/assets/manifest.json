@@ -1,0 +1,16 @@
+{
+    "name": "Pskov Interactive",
+    "short_name": "PI",
+    "start_url": ".",
+    "display": "browser",
+    "background_color": "#EEE",
+    "description": "Pskov Interactive - компания по разработке компьютерных игр в жанре 'стратегии'. Является студенческим проектом.",
+    "categories": [ "games", "entertainment" ],
+    "icons": [
+        {
+            "src": "static/assets/favicon-192x192px.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}

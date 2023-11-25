@@ -1,0 +1,44 @@
+.section-video {
+    width: 90%;
+    max-width: 940px;
+    padding: 20px;
+    margin: auto;
+    margin-bottom: 20px;
+    background-color: var(--colour-back);
+    border-radius: 20px;
+}
+
+.section-video > h1 {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 150%;
+    text-align: center;
+}
+
+.section-video > video {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.section-video > details {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.section-video > details > summary {
+    cursor: pointer;
+}
+
+.section-video > details[open] > summary {
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+}
+
+.section-video > details > p {
+    box-sizing: border-box;
+    width: 90%;
+    padding-left: 17px;
+    margin-top: 10px;
+}

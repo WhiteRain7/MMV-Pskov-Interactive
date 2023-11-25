@@ -1,18 +1,97 @@
 """
 Definition of views.
 """
-
-from django.shortcuts import render, redirect
 from django.http import HttpRequest
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
 
-from .forms import FeedbackForm
-from .models import Game, Blog, Comment # использование модели комментариев
-from .forms import CommentForm, BlogForm # использование формы ввода комментария
+from app import models, forms
 
 from datetime import datetime
-import random
+from math import inf
+
+def regular (page):
+    pages = {
+        'home' : 'Домашняя страница',
+        'about' : 'О компании',
+        'videos': 'Видео',
+        'news': 'Новости',
+        'store': 'Магазин',
+        'login': 'Вход',
+        'registration': 'Регистрация',
+    }
+
+    return {
+        'year': datetime.now().year,
+        'page': page,
+        'page_title': pages[page]
+    }
+    
+TIMELINE = [
+    { 'year': None, 'hex': '#c72727', 'width': '10%'   , 'name': 'BC'          , 'human': 'До н.э.' },
+    { 'year': 0   , 'hex': '#beb317', 'width': '18.13%', 'name': 'ancient'     , 'human': 'Античность' },
+    { 'year': 476 , 'hex': '#da571b', 'width': '37.22%', 'name': 'middle-ages' , 'human': 'Средневековье' },
+    { 'year': 1453, 'hex': '#1e8ccc', 'width': '13.67%', 'name': 'early-modern', 'human': 'Новое время' },
+    { 'year': 1812, 'hex': '#13a786', 'width': '6.4%'  , 'name': 'modern'      , 'human': 'Эпоха революций' },
+    { 'year': 1980, 'hex': '#9a20ca', 'width': '4.58%' , 'name': 'space-age'   , 'human': 'Эра освоения космоса' },
+    { 'year': 2100, 'hex': '#cc27a3', 'width': '10%'   , 'name': 'future'      , 'human': 'Будущее' },
+]
+
+def guess_era (year):
+    for i in range(len(TIMELINE)-1, 0, -1):
+        if year > TIMELINE[i]['year']:
+            return TIMELINE[i]
+    return TIMELINE[0]
+
+def calculate_position (year):
+    if year < TIMELINE[1]['year']: return 5
+    elif TIMELINE[-1]['year'] < year: return 95
+    else: return 10 + 80 * (year / (TIMELINE[-1]['year'] - TIMELINE[1]['year']))
+
+def calculate_top_position (year):
+    era = guess_era(year)
+    index = TIMELINE.index(era)
+    next_era = TIMELINE[index + 1] if index < len(TIMELINE) - 1 else {}
+    
+    if index == 0: return 5
+    elif index == len(TIMELINE) - 1: return 95
+    else: return 100 * (index / len(TIMELINE)) + (100 / len(TIMELINE)) * ((year - era['year']) / (next_era['year'] - era['year']))
+
+def get_timeline (syear, eyear):
+    if syear > eyear: syear, eyear = eyear, syear
+
+    timeline = []
+
+    timeline.append({
+        'year' : TIMELINE[0]['year' ],
+        'hex'  : TIMELINE[0]['hex'  ],
+        'width': TIMELINE[0]['width'],
+        'name' : TIMELINE[0]['name' ],
+        'human': TIMELINE[0]['human'],
+        'included': syear <= TIMELINE[1]['year'],
+    })
+
+    for i in range(1, len(TIMELINE)):
+        era = TIMELINE[i]
+        next_era = TIMELINE[i + 1] if i < len(TIMELINE) - 1 else {}
+
+        timeline.append({
+            'year' : era['year' ],
+            'hex'  : era['hex'  ],
+            'width': era['width'],
+            'name' : era['name' ],
+            'human': era['human'],
+            'included': (
+                era.get('year', inf) <= eyear
+                and
+                syear <= next_era.get('year', inf)
+            ),
+        })
+
+    return timeline
+
+
+def redirect_home (request): return redirect('home')
 
 def home (request):
     """
@@ -24,30 +103,9 @@ def home (request):
         request,
         'app/index.html',
         {
-            'page': 'homep',
-            'page_title': 'Домашняя страница',
-            'year':datetime.now().year,
-            'randint': random.randint(1, 12),
-            'games': Game.objects.all(),
-            'blogs': Blog.objects.all()[:3]
-        }
-    )
-
-def contact (request):
-    """
-        Renders the contact page.
-    """
-    assert isinstance(request, HttpRequest)
-
-    return render(
-        request,
-        'app/contact.html',
-        {
-            'page': 'links',
-            'page_title': 'Контакты',
-            'message': 'Наши контакты.',
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
+            **regular('home'),
+            'games': models.Game.objects.all(),
+            'articles': models.Article.objects.all()[:3]
         }
     )
 
@@ -59,221 +117,233 @@ def about (request):
 
     return render(
         request,
-        'app/about.html',
+        'app/pages/presentation/about.html',
         {
-            'page': 'about',
-            'page_title': 'О компании',
-            'message': 'Описание нашей компании.',
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
+            **regular('about'),
         }
     )
-
-def feedback (request):
+    
+def videos (request):
     """
-        Renders the about page.
+        Renders the video page.
     """
     assert isinstance(request, HttpRequest)
-
-    if request.method == 'POST':
-        form = FeedbackForm(request.POST)
-        if form.is_valid():
-            data = dict()
-            data['game' ] = Game.objects.get(id=form.cleaned_data['game']).name
-            data['mark' ] = form.cleaned_data['mark'        ]
-            data['good' ] = form.cleaned_data['details_good']
-            data['bad'  ] = form.cleaned_data['details_bad' ]
-            data['email'] = (
-                form.cleaned_data['contact']
-                if form.cleaned_data['email_allowed'] else
-                '<email not allowed>'
-            )
-            form = None
-
-    else:
-        data = None
-        form = FeedbackForm()
 
     return render(
         request,
-        'app/feedback.html',
+        'app/pages/presentation/videos.html',
         {
-            'page': 'fdbck',
-            'page_title': 'Оставить отзыв' if data is None else 'Отзыв отправлен',
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
-            'form': form,
-            'data': data
+            **regular('videos'),
         }
     )
 
-def registration (request):
+def sign_in (request):
     """
-        Renders the registration page.
+        Renders the authorization page.
     """
-
     assert isinstance(request, HttpRequest)
 
-    if request.method == "POST": # после отправки формы
-        regform = UserCreationForm(request.POST)
+    if request.method == "POST":
+        form = forms.SignInForm(request.POST)
 
-        if regform.is_valid(): #валидация полей формы
+        if form.is_valid():
+            saved = form.save(commit=False)
 
-            reg_f = regform.save(commit=False) # не сохраняем автоматически данные формы
+            saved.last_login = datetime.now()
 
-            reg_f.is_staff = False # запрещен вход в административный раздел
-            reg_f.is_active = True # активный пользователь
-            reg_f.is_superuser = False # не является суперпользователем
-            reg_f.date_joined = datetime.now() # дата регистрации
-            reg_f.last_login = datetime.now() # дата последней авторизации
-
-            reg_f.save() # сохраняем изменения после добавления данных
+            saved.save()
 
             user = authenticate(
-                username=regform.cleaned_data['username'], 
-                password=regform.cleaned_data['password1']
+                username = saved.cleaned_data['username'], 
+                password = saved.cleaned_data['password']
             )
             login(request, user)
 
-            return redirect('home') # переадресация на главную страницу после регистрации
-
-    else:
-
-        regform = UserCreationForm() # создание объекта формы для ввода данных нового пользователя
+            return redirect('home')
 
     return render(
         request,
-        'app/registration.html',
+        'app/pages/auth/sign-in.html',
         {
-            'regform': regform, # передача формы в шаблон веб-страницы
-            'year':datetime.now().year,
-            'randint': random.randint(1, 12),
+            **regular('login'),
+            'form': forms.SignInForm()
         }
     )
 
-def posts (request, parametr = None):
+def sign_up (request):
+    """
+        Renders the registration page.
+    """
+    assert isinstance(request, HttpRequest)
+
+    if request.method == "POST":
+        form = forms.SignUpForm(request.POST)
+
+        if form.is_valid():
+            saved = form.save(commit=False)
+
+            if form.cleaned_data['photo']: saved.photo = form.cleaned_data['photo']
+            saved.is_staff = False
+            saved.is_active = True
+            saved.is_superuser = False
+            saved.date_joined = datetime.now()
+            saved.last_login = datetime.now()
+
+            saved.save()
+
+            # user = authenticate(
+            #     username = saved.username,
+            #     password = saved.password
+            # )
+            # login(request, user)
+
+            return redirect('home')
+
+    return render(
+        request,
+        'app/pages/auth/sign-up.html',
+        {
+            **regular('registration'),
+            'form': forms.SignUpForm(),
+        }
+    )
+
+def news (request, tag = None):
     """
         Renders the posts page.
     """
     assert isinstance(request, HttpRequest)
 
-    available_tags = [
+    game_tags = [
         {
             'tag': game.tag,
-            'colour': game.tag_colour
-        } for game in Game.objects.all()
+            'colour': game.colour
+        } for game in models.Game.objects.all()
     ]
 
-    if parametr is None:
-        posts = Blog.objects.all() # запрос на выбор всех статей блога из модели
+    extra_tags = [
+        {
+            'tag': article_tag.tag,
+            'colour': article_tag.colour
+        } for article_tag in models.ArticleTag.objects.all()
+    ]
+
+    if tag is None:
+        articles = models.Article.objects.all()
+
     else:
-        games = Game.objects.filter(tag=parametr)
-        posts = []
-        for game in games:
-            posts += Blog.objects.filter(about=game.id)
+        articles = []
+
+        for game in models.Game.objects.filter(tag = tag):
+            articles += models.Article.objects.filter(about = game.id)
+
+        if not articles:
+            article_tag = models.ArticleTag.objects.get(tag = tag)
+            articles.extend(models.Article.objects.filter(tag = article_tag))
+
 
     return render(
         request,
-        'app/posts.html',
+        'app/pages/news/articles.html',
         {
-            'page': 'posts',
-            'page_title': 'Статьи',
-            'posts': posts,
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
-            'tag': parametr,
-            'tags': available_tags,
+            **regular('news'),
+            'articles': articles,
+            'filter_tag': tag,
+            'game_tags': game_tags,
+            'extra_tags': extra_tags,
         }
     )
 
-def blogpost (request, parametr):
+def article (request, id):
     """
         Renders the blogpost page.
     """
     assert isinstance(request, HttpRequest)
 
-    post_1 = Blog.objects.get(id=parametr) # запрос на выбор конкретной статьи по параметру
-    comments = Comment.objects.filter(post=parametr)
+    article = models.Article.objects.get(id = id)
+    comments = models.Comment.objects.filter(post = id)
+    form = forms.CommentForm()
 
-    if request.method == "POST": # после отправки данных формы на сервер методом POST
-        form = CommentForm(request.POST)
+    return render(
+        request,
+        'app/pages/news/article.html',
+        {
+            **regular('news'),
+            'article': article,
+            'comments': comments,
+            'form': form,
+        }
+    )
+
+def comment (request, id):
+    """
+        Processes the comment form.
+    """
+    assert isinstance(request, HttpRequest)
+
+    if request.method == "POST":
+        form = forms.CommentForm(request.POST)
+
         if form.is_valid():
-            comment_f = form.save(commit=False)
-            comment_f.author = request.user # добавляем (так как этого поля нет в форме) в модель Комментария (Comment) в поле автор авторизованного пользователя
-            comment_f.date = datetime.now() # добавляем в модель Комментария (Comment) текущую дату
-            comment_f.post = Blog.objects.get(id=parametr) # добавляем в модель Комментария (Comment) статью, для которой данный комментарий
-            comment_f.save() # сохраняем изменения после добавления полей
+            saved = form.save(commit=False)
 
-            return redirect('blogpost', parametr=post_1.id) # переадресация на ту же страницу статьи после отправки комментария
-        
-    else:
-        form = CommentForm() # создание формы для ввода комментария
+            saved.date = datetime.now()
+            saved.post = models.Article.objects.get(id = id)
+            saved.author = request.user
 
-    return render(
-        request,
-        'app/blogpost.html',
-        {
-            'page': 'posts',
-            'post_1': post_1, # передача конкретной статьи в шаблон веб-страницы
-            'year':datetime.now().year,
-            'randint': random.randint(1, 12),
-            'comments': comments, # передача всех комментариев к данной статье в шаблон веб-страницы
-            'form': form, # передача формы добавления комментария в шаблон веб-страницы
-        }
-    )
+            saved.save()
 
-def newpost (request):
+    return redirect('article', id)
+
+def store (request):
     """
-        Renders the new post creation page.
+        Renders the store page.
     """
-
     assert isinstance(request, HttpRequest)
 
-    if request.method == "POST": # после отправки формы
-        form = BlogForm(request.POST, request.FILES)
+    games = models.Game.objects.all()
 
-        if form.is_valid(): #валидация полей формы
+    status_choices = {
+        'not-started': 'Не начата',
+        'planned': 'Запланирована',
+        'closed-development': 'В закрытой разработке',
+        'open-development': 'В открытой разработке',
+        'beta-testing': 'Тестирование',
+        'published': '',
+        'not-supported': 'Не поддерживается',
+    }
 
-            post_f = form.save(commit=False) # не сохраняем автоматически данные формы
+    for game in games:
+        game.is_visible = (game.status != 'not-started' and game.status != 'planned')
+        game.is_purchasable = game.is_visible and game.status != 'closed-development'
+        game.status = status_choices[game.status]
 
-            post_f.posted = datetime.now()
-            post_f.author = request.user
+        game.DLCs = models.DLC.objects.filter(about = game.id)
 
-            post_f.save() # сохраняем изменения после добавления данных
-
-            return redirect('posts') # переадресация на главную страницу после регистрации
-
-    else:
-
-        form = BlogForm() # создание объекта формы для ввода данных нового пользователя
-
-    return render(
-        request,
-        'app/newpost.html',
-        {
-            'page': 'npost',
-            'form': form, # передача формы в шаблон веб-страницы
-            'page_title': 'Создание блога',
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
-            'game_names': Game.objects.all()
+        game.timeline_data = {
+            'timeline': get_timeline(game.timeline_start, game.timeline_end),
+            'start': {
+                'year': game.timeline_start,
+                'pos': str(calculate_position(game.timeline_start)) + '%',
+                'top': str(calculate_top_position(game.timeline_start)) + '%',
+                'era': guess_era(game.timeline_start),
+            },
+            'end': {
+                'year': game.timeline_end,
+                'pos': str(calculate_position(game.timeline_end)) + '%',
+                'top': str(calculate_top_position(game.timeline_end)) + '%',
+                'era': guess_era(game.timeline_end),
+            }
         }
-    )
-    
-def video (request):
-    """
-        Renders the new post creation page.
-    """
 
-    assert isinstance(request, HttpRequest)
+    accessories = models.Accessory.objects.all()
 
     return render(
         request,
-        'app/video.html',
+        'app/pages/store/store.html',
         {
-            'page': 'video',
-            'page_title': 'Видео',
-            'year': datetime.now().year,
-            'randint': random.randint(1, 12),
+            **regular('store'),
+            'games': games,
+            'accessories': accessories,
         }
     )

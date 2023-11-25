@@ -1,0 +1,26 @@
+{% if user.is_authenticated %}
+
+<button type="button" id="profile">
+    <div id="profile-information">
+        <p id="profile-username">{{ user.username }}</p>
+        <p id="profile-role">
+            {% if user.is_staff or user.is_superuser %}администратор
+            {% elif user.is_editor %}редактор
+            {% else %}пользователь
+            {% endif %}
+        </p>
+    </div>
+    <img src="{{ user.photo.url }}" alt="" width="36px" height="36px" id="profile-image" aria-hidden="true" />
+</button>
+
+<form action="/auth/sign-out" method="GET" id="sign-out-form">
+    {% csrf_token %}
+    <input type="submit" value="выйти" class="inline-button" />
+</form>
+
+{% else %}
+
+<a id="sing-in" href="{% url 'sign-in' %}" class="inline-button">войти</a>
+<a id="sign-up" href="{% url 'sign-up' %}" class="inline-button">регистрация</a>
+
+{% endif %}
