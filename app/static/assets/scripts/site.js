@@ -79,7 +79,15 @@ function carousel_left () {
     carousel_pos = next_pos
 }
 
-window.onload = function () {
+window.onpageshow = function () {
     draw_delimiter()
     prepare_carousel()
+}
+
+window.onpageshow = function () {
+    document.getElementById('main').classList.remove('fading')
+}
+
+window.onbeforeunload = function () {
+    document.getElementById('main').classList.add('fading')
 }

@@ -371,3 +371,22 @@
     #site-menu-icon { display: flex !important }
     #alt-site-navigation { display: flex !important }
 }
+
+
+#main {
+    animation: appearance .35s;
+}
+
+@keyframes appearance {
+    from { opacity: 0; transform: translateX(200px); }
+    to   { opacity: 1; transform: none; }
+}
+
+#main.fading {
+    animation: fading .35s;
+}
+
+@keyframes fading {
+    from { opacity: 1; transform: none; }
+    to   { opacity: 0; transform: translateX(-200px); }
+}
