@@ -26,12 +26,15 @@ urlpatterns = [
          name='sign-in'),
     path('auth/sign-up/', views.sign_up, name = 'sign-up'),
     path('auth/sign-out/', LogoutView.as_view(next_page='/auth/sign-in'), name = 'sign-out'),
+    path('profile/<int:id>/', views.profile, name='profile'),
+    path('profile/', views.profile, name='profile'),
     path('admin/', admin.site.urls),
     path('news/', views.news, name='news'),
     path('news/<str:tag>/', views.news, name='news'),
     path('news/article/<int:id>', views.article, name='article'),
     path('news/comment/<int:id>', views.comment, name='comment'),
     path('store/', views.store, name='store'),
+    path('place/order/', views.order, name='order'),
     path('accounts/profile/', views.redirect_home, name='redirect_home'),
 ]
 

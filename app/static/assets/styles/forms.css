@@ -99,7 +99,7 @@
     transition: .5s;
 }
 .form-field:hover > :is(.form-field-label, input, select, textarea, .form-field-image) {
-    background: var(--colour-element);
+    box-shadow: 0 0 4px 0 var(--colour-contrast-decoration-back);
 }
 
 .form-field > :is(input, select, textarea):valid ~ .form-field-label {

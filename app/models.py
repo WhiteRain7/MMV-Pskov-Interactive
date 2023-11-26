@@ -231,6 +231,16 @@ class User (AbstractUser):
         upload_to = 'media',
     )
 
+    first = models.CharField(
+        max_length = 100,
+        verbose_name = "Имя"
+    )
+
+    last = models.CharField(
+        max_length = 100,
+        verbose_name = "Фамилия"
+    )
+
     purchased = models.ManyToManyField(
         Game,
         verbose_name = "Купленные игры",
@@ -273,6 +283,43 @@ class Order (models.Model):
     accessories = models.ManyToManyField(
         Accessory,
         verbose_name = "Заказанные товары",
+    )
+
+    meta = models.TextField(
+        default = '',
+        verbose_name = "Метаданные заказа"
+    )
+
+    status_choices = [
+        ('auto-resolve' , 'Куплено'               ),
+
+        ('wait-verified', 'Ожидает проверки'      ),
+        ('verified'     , 'Проверено'             ),
+        ('paid'         , 'Оплачено'              ),
+        ('shipped'      , 'Отгружено'             ),
+        ('delivered'    , 'Доставлено'            ),
+        ('taken'        , 'Получено'              ),
+
+        ('cancelled'    , 'Отменено пользователем'),
+        ('denied'       , 'Отменено продавцом'    ),
+        ('returned'     , 'Возвращено'            ),
+    ]
+
+    status = models.CharField(
+        max_length=20,
+        choices = status_choices,
+        default = 'wait-verified',
+        verbose_name = "Статус заказа"
+    )
+
+    comment = models.TextField(
+        default = "",
+        verbose_name = "Комментарий к статусу заказа"
+    )
+
+    address = models.TextField(
+        default = "",
+        verbose_name = "Адрес доставки"
     )
 
     created = models.DateTimeField(

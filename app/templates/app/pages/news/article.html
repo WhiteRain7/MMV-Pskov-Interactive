@@ -69,7 +69,11 @@
     <section class="article-comment {% if comment.author == user %}own-comment{% endif %}" role="comment">
         <h3>
             <img src="{{ comment.author.photo.url }}" alt="{{ comment.author }}" width="28" height="28" aria-hidden="true" />
-            {{ comment.author }}
+            <a href="/profile/{{ comment.author.id }}">
+                {% if comment.author.first %}{{ comment.author.first }} {{ comment.author.last }}
+                {% else %}{{ comment.author.username }}
+                {% endif %}
+            </a>
         </h3>
         <p>{{ comment.text|linebreaksbr }}</p>
         <time datetime="{{ comment.date }}">{{ comment.date }}</time>

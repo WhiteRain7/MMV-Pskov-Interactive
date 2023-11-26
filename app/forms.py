@@ -48,6 +48,24 @@ class SignUpForm (UserCreationForm):
             'placeholder': 'Введите логин',
             'title': 'Введите ваш уникальный логин, который вы указывали при регистрации'
         }))
+    
+    first = forms.CharField(
+        max_length = 100,
+        widget = forms.TextInput({
+            'class': 'form-control',
+            'placeholder': 'Введите ваше имя',
+            'title': 'Введите ваше имя'
+        })
+    )
+
+    last = forms.CharField(
+        max_length = 100,
+        widget = forms.TextInput({
+            'class': 'form-control',
+            'placeholder': 'Введите вашу фамилию',
+            'title': 'Введите вашу фамилию'
+        })
+    )
 
     password1 = forms.CharField(
         label = _("Password1"),
@@ -67,7 +85,7 @@ class SignUpForm (UserCreationForm):
     
     class Meta (UserCreationForm):
         model = User
-        fields = ('photo', 'username', 'password1', 'password2')
+        fields = ('photo', 'username', 'first', 'last', 'password1', 'password2')
 
 
 class DLCForm (forms.ModelForm):

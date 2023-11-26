@@ -217,6 +217,7 @@
         linear-gradient(-135deg, var(--colour-contrast-decoration-back) 8px, transparent 8px),
         linear-gradient(-45deg , var(--colour-contrast-decoration-back) 8px, transparent 8px)
     ;
+    text-decoration: none;
     clip-path: polygon(
         0 0,
         calc(100% - 10px) 0,
@@ -373,7 +374,7 @@
 }
 
 
-#main {
+#main > * {
     animation: appearance .35s;
 }
 
@@ -382,7 +383,7 @@
     to   { opacity: 1; transform: none; }
 }
 
-#main.fading {
+#main.fading > * {
     animation: fading .35s;
 }
 

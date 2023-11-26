@@ -45,3 +45,7 @@ abbr {
     text-decoration: none;
     cursor: help;
 }
+
+menu {
+    list-style: none;
+}

@@ -1,0 +1,64 @@
+<aside id="cart">
+    <button type="button" id="cart-open" title="Уменьшить панель">
+        <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 -960 960 960" width="36"><path d="M240-80q-33 0-56.5-23.5T160-160v-480q0-33 23.5-56.5T240-720h80q0-66 47-113t113-47q66 0 113 47t47 113h80q33 0 56.5 23.5T800-640v480q0 33-23.5 56.5T720-80H240Zm0-80h480v-480h-80v80q0 17-11.5 28.5T600-520q-17 0-28.5-11.5T560-560v-80H400v80q0 17-11.5 28.5T360-520q-17 0-28.5-11.5T320-560v-80h-80v480Zm160-560h160q0-33-23.5-56.5T480-800q-33 0-56.5 23.5T400-720ZM240-160v-480 480Z"/></svg>
+    </button>
+
+    <output id="cart-total">
+        <data value="0">0 в корзине</data>
+        <data value="0">0 ₽</dat>
+    </output>
+
+    <div id="cart-empty"></div>
+
+    <button type="button" id="cart-continue" title="Перейти к оформлению заказа">
+        <span>продолжить</span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 -960 960 960" width="36"><path d="M480-329.334 630.666-480 480-630.666 433.334-584 504-513.333H326.667v66.666H504L433.334-376 480-329.334ZM480-80q-82.333 0-155.333-31.5t-127.334-85.833Q143-251.667 111.5-324.667T80-480q0-83 31.5-156t85.833-127q54.334-54 127.334-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82.333-31.5 155.333T763-197.333Q709-143 636-111.5T480-80Zm0-66.666q139.333 0 236.334-97.334 97-97.333 97-236 0-139.333-97-236.334-97.001-97-236.334-97-138.667 0-236 97Q146.666-619.333 146.666-480q0 138.667 97.334 236 97.333 97.334 236 97.334ZM480-480Z"/></svg>
+    </button>
+
+    <button type="button" id="cart-cancel" title="Очистить корзину">
+        <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 -960 960 960" width="36"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-66.666q58.675 0 113.005-19.5 54.329-19.5 98.329-56.501L222.667-691.334q-36.334 44.667-56.167 98.78Q146.666-538.442 146.666-480q0 139.583 96.875 236.459Q340.417-146.666 480-146.666Zm256.667-122q35.667-44 56.167-98.329 20.5-54.33 20.5-113.005 0-139.583-96.875-236.459Q619.583-813.334 480-813.334q-58.442 0-112.554 19.834-54.113 19.833-98.78 56.833l468.001 468.001Z"/></svg>
+    </button>
+</aside>
+
+
+<dialog id="cart-dialog" aria-atomic="true" aria-live="assertive" aria-busy="false" aria-modal="false" aria-labelledby="cart-dialog-title">
+    <div id="cart-dialog-dark"></div>
+
+    <section id="cart-dialog-content">
+        <h1 id="cart-dialog-title">Корзина</h1>
+
+        <div id="cart-dialog-items"></div>
+
+        <div id="cart-dialog-data">
+            <output id="cart-dialog-sum">0 ₽</output>
+
+            <input type="text" id="cart-dialog-address" value="" name="address" placeholder="Адрес доставки" />
+        </div>
+
+        <menu id="cart-dialog-actions">
+            <li>
+                <button type="button" id="cart-dialog-cancel" class="standalone-button">очистить</button>
+            </li>
+            <li>
+                <button type="button" id="cart-dialog-order" class="standalone-button contrast-positive">оформить</button>
+            </li>
+            <li>
+                <button type="button" id="cart-dialog-close" class="standalone-button">закрыть</button>
+            </li>
+        </menu>
+    </section>
+</dialog>
+
+
+<dialog id="thanks-dialog" aria-live="assertive" aria-modal="false" aria-labelledby="thanks-dialog-title">
+    <div id="thanks-dialog-dark"></div>
+    
+    <section id="thanks-dialog-content">
+        <h1 id="thanks-dialog-title">Спасибо!</h1>
+
+        <p>Ваш заказ оформлен. Вы сможете найти его в вашем профиле.</p>
+        <p>Если возникли вопросы, вы можете задать нам их по почте <a href="mailto:Support@example.com">Support@example.com</a></p>
+
+        <button type="button" id="thanks-dialog-close" class="standalone-button contrast-positive">закрыть</button>
+    </section>
+</dialog>

@@ -1,0 +1,429 @@
+#profile-container {
+    box-sizing: border-box;
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    background: var(--colour-back);
+    color: var(--colour-front);
+}
+
+#profile-container > h1 {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 150%;
+    text-align: center;
+}
+
+#profile-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--colour-element);
+}
+
+#profile-content-figure {
+    height: fit-content;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px 0 var(--colour-contrast-decoration-back);
+    overflow: hidden;
+    position: relative;
+    font-size: 0;
+}
+
+#profile-content-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+#profile-image-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#profile-content-info {
+    padding: 6px 0;
+}
+
+#profile-content-name {
+    display: block;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+#profile-content-point {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-bottom: 2px;
+    border-radius: 666px;
+    background: var(--colour-soft);
+}
+
+#profile-content-role {
+    display: block;
+    margin-block: 0 10px;
+    margin-left: 10px;
+    font-size: 90%;
+    color: var(--colour-soft);
+    position: relative;
+}
+
+#profile-content-role::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 4px);
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 666px;
+    background: var(--colour-soft);
+}
+
+#profile-content-date {
+    display: block;
+    font-size: 110%;
+    color: var(--colour-contrast-decoration-back);
+}
+
+
+#profile-games {
+    width: 100%;
+    margin-top: 30px;
+}
+
+#profile-games > h2 {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 150%;
+    text-align: center;
+}
+
+#profile-games-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px 10px;
+}
+
+.profile-games-group {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    width: 300px;
+    max-width: 50%;
+}
+
+.profile-DLC-group {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 4px;
+    width: 90%;
+    margin-left: 10px;
+    list-style: none;
+}
+
+.order-item.DLC {
+    height: 44px;
+}
+.order-item.DLC .order-item-figure {
+    width: 36px;
+    height: 36px;
+}
+.order-item.DLC .order-item-image {
+    width: 36px;
+    height: 36px;
+}
+.order-item.DLC .order-item-name {
+    font-size: 110%;
+}
+
+.order-item:is(.game, .DLC):not(.bought) {
+    opacity: .3;
+}
+
+
+#profile-orders {
+    border-collapse: separate;
+    border-spacing: 6px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+#profile-orders caption {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 150%;
+    text-align: center;
+}
+
+#profile-orders :is(th, td) {
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+#profile-orders thead th {
+    background: var(--colour-contrast-decoration-back);
+    color: var(--colour-contrast-decoration-front);
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+#profile-orders tbody th {
+    background: var(--colour-pale-decoration-back);
+    color: var(--colour-pale-decoration-front);
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+#profile-orders td {
+    background: var(--colour-pale-decoration-back);
+    color: var(--colour-pale-decoration-front);
+}
+
+#profile-orders :is(th, td):nth-child(1) {
+    width: 60px;
+    text-align: left;
+    vertical-align: top;
+}
+#profile-orders :is(th, td):nth-child(2) {
+    text-align: left;
+    vertical-align: top;
+}
+#profile-orders :is(th, td):nth-child(3) {
+    width: 100px;
+    text-align: center;
+    vertical-align: center;
+}
+#profile-orders :is(th, td):nth-child(4) {
+    width: 200px;
+    text-align: center;
+    vertical-align: top;
+    position: relative;
+}
+
+#profile-orders td:nth-child(3) {
+    font-size: 110%;
+    font-weight: bold;
+}
+
+
+.order-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 54px;
+    padding: 4px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .1);
+    color: var(--colour-front);
+}
+.order-item:not(:first-child) {
+    margin-top: 6px;
+}
+
+.order-item-figure {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.order-item-image {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.order-item-info {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2px;
+    box-sizing: border-box;
+    height: 100%;
+    padding-right: 10px;
+    background: transparent;
+}
+
+.order-item-name {
+    color: var(--colour-contrast-decoration-back);
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.order-item-price mo {
+    margin-inline: 6px;
+}
+
+
+.order-status {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    width: 90%;
+    margin: auto;
+}
+
+.order-status > input[type=checkbox] {
+    display: none;
+}
+
+.order-status > label {
+    width: 100%;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: var(--colour-contrast-decoration-back);
+    color: var(--colour-contrast-decoration-front);
+    font-size: 110%;
+    text-align: center;
+    cursor: pointer;
+    transition: .25s;
+}
+.order-status > label:hover {
+    filter: brightness(1.1);
+}
+.order-status > label:active {
+    filter: brightness(.9);
+}
+
+.order-status > p {
+    display: none;
+    width: 100%;
+    font-size: 80%;
+    text-align: left;
+}
+
+.order-status > input[type=checkbox]:checked ~ p {
+    display: block;
+}
+
+
+@media screen and (max-width: 900px) {
+    .profile-games-group {
+        max-width: 100%;
+    }
+
+    #profile-orders :is(th, td):nth-child(1) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    #profile-orders tr {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    #profile-orders tr :is(td, th):nth-child(2) {
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+    }
+    #profile-orders tr :is(td, th):nth-child(3),
+    #profile-orders tr :is(td, th):nth-child(4) {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        width: 40%;
+        border-radius: 8px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #profile-container {
+        padding: 10px;
+    }
+
+    #profile-content {
+        display: block;
+        background: transparent;
+    }
+
+    #profile-content-figure {
+        float: left;
+        width: 60px;
+        min-width: 60px;
+        max-width: 60px;
+        height: 60px;
+        min-height: 60px;
+        max-height: 60px;
+        margin: 0 10px 4px 0;
+    }
+
+    #profile-content-image {
+        width: 60px;
+        min-width: 60px;
+        max-width: 60px;
+        height: 60px;
+        min-height: 60px;
+        max-height: 60px;
+    }
+
+    #profile-content-info {
+        width: calc(100% - 60px);
+    }
+
+    #profile-content-name {
+        font-size: 120%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    #profile-content-role {
+        margin-top: 6px;
+    }
+
+    #profile-content-role::before {
+        display: none;
+    }
+
+    #profile-content-date {
+        margin-top: 20px;
+        font-size: 90%;
+    }
+}

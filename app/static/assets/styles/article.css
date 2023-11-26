@@ -141,7 +141,12 @@
 }
 
 .article-comment > h3 {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
     box-sizing: border-box;
     width: 100%;
     padding: 4px 8px;
@@ -153,13 +158,8 @@
     position: relative;
 }
 
-.article-comment > h3 {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px;
+.article-comment > h3 > a {
+    text-decoration: none;
 }
 
 .article-comment > h3 > img {

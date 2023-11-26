@@ -1,8 +1,8 @@
 {% if user.is_authenticated %}
 
-<button type="button" id="profile">
+<a href="{% url 'profile' %}" id="profile">
     <div id="profile-information">
-        <p id="profile-username">{{ user.username }}</p>
+        <p id="profile-username">{% if user.frist %}{{ user.first }}{% else %}{{ user.username }}{% endif %}</p>
         <p id="profile-role">
             {% if user.is_staff or user.is_superuser %}администратор
             {% elif user.is_editor %}редактор
@@ -11,7 +11,7 @@
         </p>
     </div>
     <img src="{{ user.photo.url }}" alt="" width="36px" height="36px" id="profile-image" aria-hidden="true" />
-</button>
+</a>
 
 <form action="/auth/sign-out" method="GET" id="sign-out-form">
     {% csrf_token %}

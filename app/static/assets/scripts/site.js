@@ -82,9 +82,6 @@ function carousel_left () {
 window.onpageshow = function () {
     draw_delimiter()
     prepare_carousel()
-}
-
-window.onpageshow = function () {
     document.getElementById('main').classList.remove('fading')
 }
 

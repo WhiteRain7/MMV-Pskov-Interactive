@@ -7,6 +7,8 @@
     <fieldset class="form-fieldset">
         {% include 'app/components/fields/image.html' with id="photo"     label="Фотография"     input=form.photo %}
         {% include 'app/components/fields/any.html'   with id="username"  label="Логин"          input=form.username %}
+        {% include 'app/components/fields/any.html'   with id="first"     label="Имя"            input=form.first %}
+        {% include 'app/components/fields/any.html'   with id="last"      label="Фамилия"        input=form.last %}
         {% include 'app/components/fields/any.html'   with id="password1" label="Пароль"         input=form.password1 %}
         {% include 'app/components/fields/any.html'   with id="password2" label="Пароль ещё раз" input=form.password2 %}
     </fieldset>

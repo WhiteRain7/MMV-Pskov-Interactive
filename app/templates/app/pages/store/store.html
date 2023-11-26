@@ -1,65 +1,21 @@
 {% extends "app/layout.html" %}
 
-{% block links %}
-    {% load staticfiles %}
+{% block links %}{% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/store.css' %}" />
 {% endblock %}
 
-{% block scripts %}
-    {% load staticfiles %}
+{% block scripts %}{% load staticfiles %}
     <script type="text/javascript" src="{% static 'assets/scripts/store.js' %}"></script>
+
+    <script type="text/javascript">
+        const PRODUCTS = {{ products|safe }};
+
+        const csrftoken = '{{ csrf_token }}';
+    </script>
 {% endblock %}
 
 {% block content %}
-    <!-- <section id="section-article-tags">
-        <p class="article-tag article-unifying">Игры</p>
-        {% for tag in game_tags %}
-        {% if tag.tag == filter_tag %}
-        <a
-            href="/news"
-            style="background: {{ tag.colour }};"
-            class="article-tag selected">
-            
-            #{{ tag.tag }}
-        </a>
-        {% else %}
-        <a
-            href="/news/{{ tag.tag }}"
-            style="background: {{ tag.colour }};"
-            class="article-tag">
-            
-            #{{ tag.tag }}
-        </a>
-        {% endif %}
-        {% endfor %}
-
-        <p class="article-tag article-unifying">Разделы</p>
-        {% for tag in extra_tags %}
-        {% if tag.tag == filter_tag %}
-        <a
-            href="/news"
-            style="background: {{ tag.colour }};"
-            class="article-tag selected">
-            
-            #{{ tag.tag }}
-        </a>
-        {% else %}
-        <a
-            href="/news/{{ tag.tag }}"
-            style="background: {{ tag.colour }};"
-            class="article-tag">
-            
-            #{{ tag.tag }}
-        </a>
-        {% endif %}
-        {% endfor %}
-    </section> -->
-
     <section id='store'>
-        <button type="button" id="store-scroll-to-top">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
-        </button>
-
         {% if not games %}
         <section id="section-no-games">
             <p>Ничего не найдено</p>
@@ -92,8 +48,12 @@
 
                     <div class="store-empty"></div>
 
-                    {% if game.is_purchasable %}
+                    {% if game.is_purchased %}
                     <div class="store-price-block" itemprop="offers">
+                        <data value="0" class="store-price">куплено</data>
+                    </div>
+                    {% elif game.is_purchasable %}
+                    <div class="store-price-block" itemprop="offers" data-item="g{{ game.id }}">
                         <data value="{{ game.price }}" class="store-price" itemprop="price">{{ game.price }} ₽</data>
                         <button type="button" class="inline-button store-buy">Купить</button>
                         <button type="button" class="inline-button store-cancel">Убрать</button>
@@ -122,11 +82,17 @@
     
                     <p class="store-description">{{ DLC.content|linebreaksbr }}</p>
     
+                    {% if DLC.is_purchased %}
                     <div class="store-price-block" itemprop="offers">
+                        <data value="0" class="store-price">куплено</data>
+                    </div>
+                    {% else %}
+                    <div class="store-price-block" itemprop="offers" data-item="d{{ DLC.id }}">
                         <data value="{{ game.price }}" class="store-price" itemprop="price">{{ DLC.price }} ₽</data>
                         <button type="button" class="inline-button store-buy">Купить</button>
                         <button type="button" class="inline-button store-cancel">Убрать</button>
                     </div>
+                    {% endif %}
                 </div>
             </section>
             {% endfor %}
@@ -136,7 +102,7 @@
 
         <div class="store-accessory-group">
         {% for acc in accessories %}
-        <section class="store-item store-accessory">
+        <section class="store-item store-accessory {% if acc.stock == 0 %}out{% endif %}">
             <img src="{{ acc.image.url }}" alt="{{ acc.name }}" class="store-image" />
             <div class="store-info">
                 <h1 class="store-title" title="{{ acc.name }}">{{ acc.name }}</h1>
@@ -147,14 +113,28 @@
 
                 <p class="store-description">{{ acc.content|linebreaksbr }}</p>
 
-                <div class="store-price-block" itemprop="offers">
+                {% if acc.stock == 0 %}
+                <div class="store-price-block" itemprop="offers" data-item="a{{ acc.id }}">
+                    <data value="{{ game.price }}" class="store-price" itemprop="price">нет на складе</data>
+                </div>
+                {% else %}
+                <div class="store-price-block" itemprop="offers" data-item="a{{ acc.id }}">
                     <data value="{{ game.price }}" class="store-price" itemprop="price">{{ acc.price }} ₽</data>
                     <button type="button" class="inline-button store-buy">Купить</button>
                     <button type="button" class="inline-button store-cancel">Убрать</button>
                 </div>
+                {% endif %}
             </div>
         </section>
         {% endfor %}
         </div>
+
+        {% if user.is_authenticated %}
+        {% include './cart.html' %}
+        {% endif %}
+
+        <button type="button" id="store-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
     </div>
 {% endblock %}

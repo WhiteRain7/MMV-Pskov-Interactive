@@ -1,0 +1,136 @@
+{% extends "app/layout.html" %}
+
+{% block links %}{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/profile.css' %}" />
+{% endblock %}
+
+{% block scripts %}{% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/profile.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="profile-container">
+        <h1>Профиль пользователя</h1>
+
+        <form id="profile-content" action="/edit/profile/{{ profile.id }}" method="POST" enctype="multipart/form-data">
+            <figure id="profile-content-figure">
+                <img src="{{ profile.photo.url }}" alt="{{ user }}" id="profile-content-image" />
+                {% if itself %}<input type="file" accept="image/*" id="profile-image-input" />{% endif %}
+            </figure>
+
+            <div id="profile-content-info">
+                {% if profile.first %}
+                <h1 id="profile-content-name">{{ profile.first }} {{ profile.last }} ({{ profile.username }})</h1>
+                {% else %}
+                <h1 id="profile-content-name">{{ profile.username }}</h1>
+                {% endif %}
+
+                <p id="profile-content-role">
+                    {% if profile.is_staff or profile.is_superuser %}Администратор
+                    {% elif profile.is_editor %}Редактор
+                    {% else %}Пользователь
+                    {% endif %}
+                </p>
+
+                <time id="profile-content-date" datetime="{{ profile.date_joined }}">
+                    зарегестрирован с {{ profile.date_joined|date:"d M Y г." }}
+                </time>
+            </div>
+        </form>
+
+        <div id="profile-games">
+            <h2>Игры</h2>
+
+            <div id="profile-games-content">
+                {% for game in games %}
+                <div class="profile-games-group">
+                    <section class="order-item game {% if game in profile.purchased.all %}bought{% endif %}">
+                        <figure class="order-item-figure">
+                            <img src="{{ game.image.url }}" alt="{{ game.name }}" class="order-item-image" />
+                        </figure>
+    
+                        <div class="order-item-info">
+                            <h2 class="order-item-name">{{ game.name }}</h2>
+                            <p>{% if game in profile.purchased.all %}приобретено{% else %}не приобретено{% endif %}</p>
+                        </div>
+                    </section>
+    
+                    <ul class="profile-DLC-group">
+                        {% for DLC in game.DLCs %}
+                        <li><section class="order-item DLC {% if DLC in profile.purchased_DLCs.all %}bought{% endif %}">
+                            <figure class="order-item-figure">
+                                <img src="{{ DLC.image.url }}" alt="{{ DLC.name }}" class="order-item-image" />
+                            </figure>
+        
+                            <div class="order-item-info">
+                                <h2 class="order-item-name">{{ DLC.name }}</h2>
+                            </div>
+                        </section></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if orders is not None %}
+        <table id="profile-orders">
+            <caption>Заказы</caption>
+
+            <thead class="composite-head"><tr>
+                <th>№</th>
+                <th>Товары</th>
+                <th>Стоимость</th>
+                <th>Статус</th>
+            </tr></thead>
+
+            <tbody class="composite-body">
+                {% for order in orders %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+
+                    <td>
+                        {% for item in order.products %}
+                        <section class="order-item">
+                            <figure class="order-item-figure">
+                                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="order-item-image" />
+                            </figure>
+
+                            <div class="order-item-info">
+                                <h2 class="order-item-name">{{ item.name }}</h2>
+                                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="order-item-price">
+                                    <mrow>
+                                        <mi>{{ item.quantity }}</mi>
+                                        <mo>*</mo>
+                                        <mi>{{ item.price }} ₽</mi>
+                                        <mo>=</mo>
+                                        <mi>{{ item.total }} ₽</mi>
+                                    </mrow>
+                                </math>
+                            </div>
+                        </section>
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        <data value="{{ order.sum }}">{{ order.sum }}  ₽</data>
+                    </td>
+
+                    <td>
+                        <div class="order-status">
+                            <input type="checkbox" id="order-status-{{ order.id }}" />
+
+                            <label for="order-status-{{ order.id }}" style="background: {{ order.status.colour }};">{{ order.status.title }}</label>
+
+                            <p>{{ order.status.short_descr }}</p>
+
+                            <p>{{ order.comment }}</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+{% endblock %}

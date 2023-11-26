@@ -1,7 +1,7 @@
 """
 Definition of views.
 """
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 
@@ -9,6 +9,7 @@ from app import models, forms
 
 from datetime import datetime
 from math import inf
+import json
 
 def regular (page):
     pages = {
@@ -18,6 +19,7 @@ def regular (page):
         'news': 'Новости',
         'store': 'Магазин',
         'login': 'Вход',
+        'profile': 'Профиль',
         'registration': 'Регистрация',
     }
 
@@ -182,7 +184,7 @@ def sign_up (request):
         if form.is_valid():
             saved = form.save(commit=False)
 
-            if form.cleaned_data['photo']: saved.photo = form.cleaned_data['photo']
+            saved.photo = request.FILES['photo'] or None
             saved.is_staff = False
             saved.is_active = True
             saved.is_superuser = False
@@ -191,11 +193,11 @@ def sign_up (request):
 
             saved.save()
 
-            # user = authenticate(
-            #     username = saved.username,
-            #     password = saved.password
-            # )
-            # login(request, user)
+            user = authenticate(
+                username = saved.username,
+                password = form.data['password1']
+            )
+            login(request, user)
 
             return redirect('home')
 
@@ -205,6 +207,153 @@ def sign_up (request):
         {
             **regular('registration'),
             'form': forms.SignUpForm(),
+        }
+    )
+
+def profile (request, id = None):
+    """
+        Renders the profile page.
+    """
+    assert isinstance(request, HttpRequest)
+
+    statuses = {
+        'auto-resolve' : {
+            'title': 'Куплено',
+            'colour': 'green',
+            'icon': 'check',
+            'short_descr': 'Указанные товары куплены без дополнительного подтверждения.',
+        },
+
+        'wait-verified': {
+            'title': 'Ожидает проверки',
+            'colour': 'orange',
+            'icon': 'clock',
+            'short_descr': 'Заказ ожидает подтверждения от продавца.',
+        },
+
+        'verified' : {
+            'title': 'Проверено',
+            'colour': 'darkcyan',
+            'icon': 'check',
+            'short_descr': 'Заказ подтвержден продавцом и ожидает оплаты.',
+        },
+
+        'paid' : {
+            'title': 'Оплачено',
+            'colour': 'turtle',
+            'icon': 'check',
+            'short_descr': 'Заказ оплачен и ожидает отгрузки.',
+        },
+
+        'shipped' : {
+            'title': 'Отгружено',
+            'colour': 'indigo',
+            'icon': 'check',
+            'short_descr': 'Заказ отгружен и ожидает доставки по адресу получателя.',
+        },
+
+        'delivered' : {
+            'title': 'Доставлено',
+            'colour': 'darkgreen',
+            'icon': 'check',
+            'short_descr': 'Заказ доставлен до адреса и ожидает получения.',
+        },
+
+        'taken' : {
+            'title': 'Получено',
+            'colour': 'green',
+            'icon': 'check',
+            'short_descr': 'Заказ успешно получен и оплачен.',
+        },
+
+        'cancelled' : {
+            'title': 'Отменено пользователем',
+            'colour': 'darkred',
+            'icon': 'cancel',
+            'short_descr': 'Заказ отменен пользователем.',
+        },
+
+        'denied' : {
+            'title': 'Отменено продавцом',
+            'colour': 'orangered',
+            'icon': 'cancel',
+            'short_descr': 'Заказ отменен продавцом.',
+        },
+
+        'returned' : {
+            'title': 'Возвращено',
+            'colour': 'red',
+            'icon': 'cancel',
+            'short_descr': 'Заказ возвращен продавцу.',
+        }
+    }
+
+    profile = models.User.objects.get(id = id) if id else request.user
+    orders = models.Order.objects.filter(user = profile) if profile.id == request.user.id else None
+    parsed_orders = None
+
+    if orders:
+        parsed_orders = []
+
+        for order in orders:
+            parsed_order = {
+                'id': order.id,
+                'created': order.created,
+                'raw-status': order.status,
+                'status': statuses[order.status],
+                'address': order.address,
+                'comment': order.comment,
+                'meta': json.loads(order.meta),
+                'products': []
+            }
+
+            for game in order.games.all(): parsed_order['products'].append({
+                'type': 'game',
+                'name': game.name,
+                'image': game.image,
+                'quantity': parsed_order['meta']['g' + str(game.id)]['q'],
+                'price': parsed_order['meta']['g' + str(game.id)]['p'],
+                'total': parsed_order['meta']['g' + str(game.id)]['q'] * parsed_order['meta']['g' + str(game.id)]['p'],
+            })
+                
+            for dlc in order.dlcs.all(): parsed_order['products'].append({
+                'type': 'dlc',
+                'name': dlc.name,
+                'image': dlc.image,
+                'quantity': parsed_order['meta']['d' + str(dlc.id)]['q'],
+                'price': parsed_order['meta']['d' + str(dlc.id)]['p'],
+                'total': parsed_order['meta']['d' + str(dlc.id)]['q'] * parsed_order['meta']['d' + str(dlc.id)]['p'],
+            })
+                
+            for acc in order.accessories.all(): parsed_order['products'].append({
+                'type': 'accessory',
+                'name': acc.name,
+                'image': acc.image,
+                'quantity': parsed_order['meta']['a' + str(acc.id)]['q'],
+                'price': parsed_order['meta']['a' + str(acc.id)]['p'],
+                'total': parsed_order['meta']['a' + str(acc.id)]['q'] * parsed_order['meta']['a' + str(acc.id)]['p'],
+            })
+                
+            parsed_order['sum'] = sum(product['total'] for product in parsed_order['products'])
+
+            parsed_orders.append(parsed_order)
+
+    games = models.Game.objects.all()
+
+    for game in games:
+        game.is_visible = (game.status != 'not-started' and game.status != 'planned')
+        game.DLCs = models.DLC.objects.filter(about = game.id)
+
+    return render(
+        request,
+        'app/pages/profile/profile.html',
+        {
+            **regular('profile'),
+            'profile': profile,
+            'orders': parsed_orders,
+            'itself': parsed_orders is not None,
+            'statuses': statuses,
+            'games': games
         }
     )
 
@@ -316,9 +465,12 @@ def store (request):
     for game in games:
         game.is_visible = (game.status != 'not-started' and game.status != 'planned')
         game.is_purchasable = game.is_visible and game.status != 'closed-development'
+        game.is_purchased = game in request.user.purchased.all()
         game.status = status_choices[game.status]
 
         game.DLCs = models.DLC.objects.filter(about = game.id)
+        for DLC in game.DLCs:
+            DLC.is_purchased = DLC in request.user.purchased_DLCs.all()
 
         game.timeline_data = {
             'timeline': get_timeline(game.timeline_start, game.timeline_end),
@@ -338,6 +490,31 @@ def store (request):
 
     accessories = models.Accessory.objects.all()
 
+    products = {}
+
+    for game in games:
+        products['g' + str(game.id)] = {
+            'type': 'game',
+            'name': game.name,
+            'image': game.image.url,
+            'price': game.price,
+        }
+        
+        for DLC in game.DLCs: products['d' + str(DLC.id)] = {
+            'type': 'dlc',
+            'name': DLC.name,
+            'image': DLC.image.url,
+            'price': DLC.price,
+        }
+        
+    for acc in accessories: products['a' + str(acc.id)] = {
+        'type': 'accessory',
+            'name': acc.name,
+            'image': acc.image.url,
+            'price': acc.price,
+            'limit': acc.stock
+    }
+
     return render(
         request,
         'app/pages/store/store.html',
@@ -345,5 +522,51 @@ def store (request):
             **regular('store'),
             'games': games,
             'accessories': accessories,
+            'products': products,
         }
     )
+
+def order (request):
+    """
+        Places the order.
+    """
+
+    assert isinstance(request, HttpRequest)
+
+    if request.method != "POST": return None
+
+    body = json.loads(request.read())
+
+    games = []
+    dlcs = []
+    accessories = []
+
+    meta = {}
+
+    for id_ in body['cart']:
+        if id_[0] == 'g': games.append(models.Game.objects.get(id = id_[1:]))
+        if id_[0] == 'd': dlcs.append(models.DLC.objects.get(id = id_[1:]))
+        if id_[0] == 'a': accessories.append(models.Accessory.objects.get(id = id_[1:]))
+
+        meta[id_] = {
+            'q': int(body['cart'][id_]),
+            'p': games[-1].price if id_[0] == 'g' else dlcs[-1].price if id_[0] == 'd' else accessories[-1].price,
+        }
+
+    order = models.Order.objects.create(
+        user = request.user,
+        meta = json.dumps(meta),
+        status = 'auto-resolve' if len(accessories) == 0 else 'wait-verified',
+        address = body['address'],
+    )
+
+    order.games.set(games)
+    order.dlcs.set(dlcs)
+    order.accessories.set(accessories)
+
+    user = models.User.objects.get(id = request.user.id)
+    for game in games: user.purchased.add(game)
+    for DLC in dlcs: user.purchased_DLCs.add(DLC)
+    user.save(force_update=True)
+
+    return HttpResponse(status = 200)
