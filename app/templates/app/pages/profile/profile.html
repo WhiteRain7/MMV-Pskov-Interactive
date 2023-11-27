@@ -15,7 +15,13 @@
         <form id="profile-content" action="/edit/profile/{{ profile.id }}" method="POST" enctype="multipart/form-data">
             <figure id="profile-content-figure">
                 <img src="{{ profile.photo.url }}" alt="{{ user }}" id="profile-content-image" />
-                {% if itself %}<input type="file" accept="image/*" id="profile-image-input" />{% endif %}
+                {% if itself %}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        name="photo"
+                        id="profile-image-input"/>
+                {% endif %}
             </figure>
 
             <div id="profile-content-info">

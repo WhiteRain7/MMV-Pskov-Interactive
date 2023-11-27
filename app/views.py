@@ -357,6 +357,25 @@ def profile (request, id = None):
         }
     )
 
+def edit_profile (request):
+    """
+        Edits profile with given data
+    """
+    assert isinstance(request, HttpRequest)
+
+    if request.method != 'POST' or request.method != 'PUT': return
+
+    user = models.User.objects.get(id = request.user.id)
+
+    if not user: return HttpResponse(status = 401)
+
+    # user.first = data['first'] or user.first
+    # user.last = data['last'] or user.last
+    user.photo = request.FILES['photo'] or user.photo
+    user.save(force_update=True)
+
+    return HttpResponse(status = 200)
+
 def news (request, tag = None):
     """
         Renders the posts page.

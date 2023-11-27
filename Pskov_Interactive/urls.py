@@ -28,6 +28,7 @@ urlpatterns = [
     path('auth/sign-out/', LogoutView.as_view(next_page='/auth/sign-in'), name = 'sign-out'),
     path('profile/<int:id>/', views.profile, name='profile'),
     path('profile/', views.profile, name='profile'),
+    path('edit/profile/', views.edit_profile, name='edit_profile'),
     path('admin/', admin.site.urls),
     path('news/', views.news, name='news'),
     path('news/<str:tag>/', views.news, name='news'),
