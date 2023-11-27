@@ -484,12 +484,14 @@ def store (request):
     for game in games:
         game.is_visible = (game.status != 'not-started' and game.status != 'planned')
         game.is_purchasable = game.is_visible and game.status != 'closed-development'
-        game.is_purchased = game in request.user.purchased.all()
+        try: game.is_purchased = game in request.user.purchased.all()
+        except: game.is_purchased = False
         game.status = status_choices[game.status]
 
         game.DLCs = models.DLC.objects.filter(about = game.id)
         for DLC in game.DLCs:
-            DLC.is_purchased = DLC in request.user.purchased_DLCs.all()
+            try: DLC.is_purchased = DLC in request.user.purchased_DLCs.all()
+            except: DLC.is_purchased = False
 
         game.timeline_data = {
             'timeline': get_timeline(game.timeline_start, game.timeline_end),
