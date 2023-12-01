@@ -25,8 +25,11 @@ function deleteCookie (name) {
 
 
 function assign (elem, callback) {
-    if (typeof elem === 'string') elem = document.getElementById(elem)
-    elem.addEventListener('click', callback)
+    try {
+        if (typeof elem === 'string') elem = document.getElementById(elem)
+        elem.addEventListener('click', callback)
+    }
+    catch {}
 }
 
 
@@ -302,7 +305,10 @@ window.onload = function() {
     const cart_block = document.getElementById('cart')
 
     assign('cart-open', () => {
-        if (window.matchMedia('screen and (max-width: 600px)').matches) deploy_cart()
+        if (window.matchMedia('screen and (max-width: 650px)').matches) {
+            try { deploy_cart() }
+            catch { window.location.href = '/auth/sign-in/' }
+        }
         else cart_block.classList.toggle('minimized')
     })
     assign('cart-continue', deploy_cart)
@@ -315,7 +321,7 @@ window.onload = function() {
     assign('thanks-dialog-dark', () => { document.getElementById('thanks-dialog').close() })
     assign('thanks-dialog-close', () => { document.getElementById('thanks-dialog').close() })
 
-    document.getElementById('cart-dialog').addEventListener('close', on_close_dialog)
+    try { document.getElementById('cart-dialog').addEventListener('close', on_close_dialog) } catch {}
 
     process_cart()
 }

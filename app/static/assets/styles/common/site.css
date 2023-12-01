@@ -176,15 +176,19 @@
     color: var(--colour-contrast-indigo);
 }
 
-#site-nav-about { background-image: linear-gradient(to top, var(--colour-pale-orange ), var(--colour-back) 40%) }
-#site-nav-video { background-image: linear-gradient(to top, var(--colour-pale-green  ), var(--colour-back) 40%) }
-#site-nav-news  { background-image: linear-gradient(to top, var(--colour-pale-magenta), var(--colour-back) 40%) }
-#site-nav-store { background-image: linear-gradient(to top, var(--colour-pale-red    ), var(--colour-back) 40%) }
+#site-nav-about  { background-image: linear-gradient(to top, var(--colour-pale-orange  ), var(--colour-back) 40%) }
+#site-nav-video  { background-image: linear-gradient(to top, var(--colour-pale-green   ), var(--colour-back) 40%) }
+#site-nav-news   { background-image: linear-gradient(to top, var(--colour-pale-magenta ), var(--colour-back) 40%) }
+#site-nav-store  { background-image: linear-gradient(to top, var(--colour-pale-red     ), var(--colour-back) 40%) }
+#site-nav-manage { background-image: linear-gradient(to top, var(--colour-ornate-cyan  ), var(--colour-back) 40%) }
+#site-nav-admin  { background-image: linear-gradient(to top, var(--colour-ornate-orange), var(--colour-back) 40%) }
 
-#site-nav-about:hover { color: var(--colour-ornate-orange ); fill: var(--colour-ornate-orange ) }
-#site-nav-video:hover { color: var(--colour-ornate-green  ); fill: var(--colour-ornate-green  ) }
-#site-nav-news:hover  { color: var(--colour-ornate-magenta); fill: var(--colour-ornate-magenta) }
-#site-nav-store:hover { color: var(--colour-ornate-red    ); fill: var(--colour-ornate-red    ) }
+#site-nav-about:hover  { color: var(--colour-ornate-orange ); fill: var(--colour-ornate-orange ) }
+#site-nav-video:hover  { color: var(--colour-ornate-green  ); fill: var(--colour-ornate-green  ) }
+#site-nav-news:hover   { color: var(--colour-ornate-magenta); fill: var(--colour-ornate-magenta) }
+#site-nav-store:hover  { color: var(--colour-ornate-red    ); fill: var(--colour-ornate-red    ) }
+#site-nav-manage:hover { color: var(--colour-back          ); fill: var(--colour-ornate-cyan   ) }
+#site-nav-admin:hover  { color: var(--colour-back          ); fill: var(--colour-ornate-orange ) }
 
 #nav-delimiter {
     margin-left: 6px;
@@ -384,7 +388,7 @@
 }
 
 #main.fading > * {
-    animation: fading .35s;
+    animation: fading .35s forwards;
 }
 
 @keyframes fading {

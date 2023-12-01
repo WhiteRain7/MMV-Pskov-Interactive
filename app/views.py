@@ -5,6 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 
+import sqlite3 as sql
+
 from app import models, forms
 
 from datetime import datetime
@@ -21,6 +23,7 @@ def regular (page):
         'login': 'Вход',
         'profile': 'Профиль',
         'registration': 'Регистрация',
+        'manage': 'Управление',
     }
 
     return {
@@ -289,7 +292,11 @@ def profile (request, id = None):
     }
 
     profile = models.User.objects.get(id = id) if id else request.user
-    orders = models.Order.objects.filter(user = profile) if profile.id == request.user.id else None
+    orders = (
+        models.Order.objects.filter(user = profile)
+        if profile.id == request.user.id or request.user.is_staff or request.user.is_editor else
+        None
+    )
     parsed_orders = None
 
     if orders:
@@ -583,7 +590,13 @@ def order (request):
 
     order.games.set(games)
     order.dlcs.set(dlcs)
-    order.accessories.set(accessories)
+    #order.accessories.set(accessories)
+
+    # please forgive me for all the sins I've made here, I just have to do it
+    connection = sql.connect('db.sqlite3')
+    connection.executemany('INSERT INTO Orders_accessories (order_id, accessory_id) VALUES (?, ?)', [(order.id, accessory.id) for accessory in accessories])
+    connection.commit()
+    connection.close()
 
     user = models.User.objects.get(id = request.user.id)
     for game in games: user.purchased.add(game)
@@ -591,3 +604,169 @@ def order (request):
     user.save(force_update=True)
 
     return HttpResponse(status = 200)
+
+def update_order_status (request, id):
+    """
+        Updates order status.
+    """
+
+    assert isinstance(request, HttpRequest)
+
+    if request.method != "POST": return HttpResponse(status = 405)
+    if not (request.user.is_staff or request.user.is_editor): return HttpResponse(status = 403)
+
+    body = json.loads(request.read())
+
+    order = models.Order.objects.get(id = id)
+    order.status = body['status']
+    order.comment = body['comment']
+    order.save(force_update=True)
+
+    return HttpResponse(status = 200)
+
+def manage (request):
+    """
+        Renders the manage page.
+    """
+
+    assert isinstance(request, HttpRequest)
+
+    statuses = {
+        'auto-resolve' : {
+            'title': 'Куплено',
+            'colour': 'green',
+            'icon': 'check',
+            'short_descr': 'Указанные товары куплены без дополнительного подтверждения.',
+        },
+
+        'wait-verified': {
+            'title': 'Ожидает проверки',
+            'colour': 'orange',
+            'icon': 'clock',
+            'short_descr': 'Заказ ожидает подтверждения от продавца.',
+        },
+
+        'verified' : {
+            'title': 'Проверено',
+            'colour': 'darkcyan',
+            'icon': 'check',
+            'short_descr': 'Заказ подтвержден продавцом и ожидает оплаты.',
+        },
+
+        'paid' : {
+            'title': 'Оплачено',
+            'colour': 'turtle',
+            'icon': 'check',
+            'short_descr': 'Заказ оплачен и ожидает отгрузки.',
+        },
+
+        'shipped' : {
+            'title': 'Отгружено',
+            'colour': 'indigo',
+            'icon': 'check',
+            'short_descr': 'Заказ отгружен и ожидает доставки по адресу получателя.',
+        },
+
+        'delivered' : {
+            'title': 'Доставлено',
+            'colour': 'darkgreen',
+            'icon': 'check',
+            'short_descr': 'Заказ доставлен до адреса и ожидает получения.',
+        },
+
+        'taken' : {
+            'title': 'Получено',
+            'colour': 'green',
+            'icon': 'check',
+            'short_descr': 'Заказ успешно получен и оплачен.',
+        },
+
+        'cancelled' : {
+            'title': 'Отменено пользователем',
+            'colour': 'darkred',
+            'icon': 'cancel',
+            'short_descr': 'Заказ отменен пользователем.',
+        },
+
+        'denied' : {
+            'title': 'Отменено продавцом',
+            'colour': 'orangered',
+            'icon': 'cancel',
+            'short_descr': 'Заказ отменен продавцом.',
+        },
+
+        'returned' : {
+            'title': 'Возвращено',
+            'colour': 'red',
+            'icon': 'cancel',
+            'short_descr': 'Заказ возвращен продавцу.',
+        }
+    }
+
+    orders = models.Order.objects.all()
+    parsed_orders = None
+
+    if orders:
+        parsed_orders = []
+
+        for order in orders:
+            parsed_order = {
+                'id': order.id,
+                'created': order.created,
+                'user': order.user,
+                'raw_status': order.status,
+                'status': statuses[order.status],
+                'address': order.address,
+                'comment': order.comment,
+                'meta': json.loads(order.meta),
+                'products': []
+            }
+
+            for game in order.games.all(): parsed_order['products'].append({
+                'type': 'game',
+                'name': game.name,
+                'image': game.image,
+                'quantity': parsed_order['meta']['g' + str(game.id)]['q'],
+                'price': parsed_order['meta']['g' + str(game.id)]['p'],
+                'total': parsed_order['meta']['g' + str(game.id)]['q'] * parsed_order['meta']['g' + str(game.id)]['p'],
+            })
+                
+            for dlc in order.dlcs.all(): parsed_order['products'].append({
+                'type': 'dlc',
+                'name': dlc.name,
+                'image': dlc.image,
+                'quantity': parsed_order['meta']['d' + str(dlc.id)]['q'],
+                'price': parsed_order['meta']['d' + str(dlc.id)]['p'],
+                'total': parsed_order['meta']['d' + str(dlc.id)]['q'] * parsed_order['meta']['d' + str(dlc.id)]['p'],
+            })
+                
+            for acc in order.accessories.all(): parsed_order['products'].append({
+                'type': 'accessory',
+                'name': acc.name,
+                'image': acc.image,
+                'quantity': parsed_order['meta']['a' + str(acc.id)]['q'],
+                'price': parsed_order['meta']['a' + str(acc.id)]['p'],
+                'total': parsed_order['meta']['a' + str(acc.id)]['q'] * parsed_order['meta']['a' + str(acc.id)]['p'],
+            })
+                
+            parsed_order['sum'] = sum(product['total'] for product in parsed_order['products'])
+
+            parsed_orders.append(parsed_order)
+
+    games = models.Game.objects.all()
+
+    for game in games:
+        game.is_visible = (game.status != 'not-started' and game.status != 'planned')
+        game.DLCs = models.DLC.objects.filter(about = game.id)
+
+    return render(
+        request,
+        'app/pages/manage/manage.html',
+        {
+            **regular('manage'),
+            'min_orders': [{ 'id': o['id'], 'comment': o['comment'] } for o in parsed_orders],
+            'orders': parsed_orders,
+            'statuses': statuses,
+            'games': games
+        }
+    )

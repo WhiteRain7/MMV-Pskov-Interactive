@@ -1,0 +1,128 @@
+{% extends "app/layout.html" %}
+
+{% block links %}{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.css' %}" />
+{% endblock %}
+
+{% block scripts %}{% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/manage.js' %}"></script>
+
+    <script type="text/javascript">
+        const STATUSES = {{ statuses|safe }};
+
+        const csrftoken = '{{ csrf_token }}';
+
+        let orders = {{ min_orders|safe }};
+
+        let orderid = null;
+        let orderstatus = null;
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section id="manage-container">
+        <section class="manage-section">
+            <h1>Управление заказами</h1>
+
+            <table id="user-orders">    
+                <thead class="composite-head"><tr>
+                    <th>№</th>
+                    <th>Пользователь</th>
+                    <th>Товары</th>
+                    <th>Стоимость</th>
+                    <th>Статус</th>
+                </tr></thead>
+    
+                <tbody class="composite-body">
+                    {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+    
+                        <td>
+                            <a href="/profile/{{ order.user.id }}">
+                                {% if order.user.first %}
+                                {{ order.user.first }} {{ order.user.last }}
+                                {% else %}
+                                {{ order.user.username }}
+                                {% endif %}
+                            </a>
+
+                            {% if order.address %}<p>{{ order.address }}</p>{% endif %}
+                        </td>
+
+                        <td>
+                            {% for item in order.products %}
+                            <section class="order-item">
+                                <figure class="order-item-figure">
+                                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="order-item-image" />
+                                </figure>
+    
+                                <div class="order-item-info">
+                                    <h2 class="order-item-name">{{ item.name }}</h2>
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="order-item-price">
+                                        <mrow>
+                                            <mi>{{ item.quantity }}</mi>
+                                            <mo>*</mo>
+                                            <mi>{{ item.price }} ₽</mi>
+                                            <mo>=</mo>
+                                            <mi>{{ item.total }} ₽</mi>
+                                        </mrow>
+                                    </math>
+                                </div>
+                            </section>
+                            {% endfor %}
+                        </td>
+    
+                        <td>
+                            <data value="{{ order.sum }}">{{ order.sum }}  ₽</data>
+                        </td>
+    
+                        <td>
+                            <div class="order-status">
+                                <button
+                                    type="button"
+                                    id="order-status-{{ order.id }}"
+                                    class="order-status-button status-dialog-button"
+                                    data-orderid="{{ order.id }}"
+                                    data-orderstatus="{{ order.raw_status }}"
+                                    style="background: {{ order.status.colour }};">
+                                    
+                                    {{ order.status.title }}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <dialog id="order-dialog" aria-atomic="true" aria-live="assertive" aria-busy="false" aria-modal="false" aria-labelledby="order-dialog-title">
+                <div id="order-dialog-dark"></div>
+
+                <section id="order-dialog-content">
+                    <h1 id="order-dialog-title">Изменение статуса заказа</h1>
+
+                    <div id="order-dialog-statuses">
+                    </div>
+
+                    <textarea id="order-dialog-comment"></textarea>
+
+                    <div id="order-dialog-empty"></div>
+
+                    <menu id="order-dialog-actions">
+                        <li>
+                            <button type="button" id="order-dialog-save" class="standalone-button contrast-positive">Применить</button>
+                        </li>
+                        <li>
+                            <button type="button" id="order-dialog-close" class="standalone-button contrast-negative">Закрыть</button>
+                        </li>
+                    </menu>
+                </section>
+            </dialog>
+        </section>
+
+        <button type="button" id="manage-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+    </div>
+{% endblock %}

@@ -21,9 +21,6 @@
     {% block links %}{% endblock %}
 
     <script type="text/javascript" src="{% static 'assets/scripts/site.js' %}"></script>
-    <!-- <script src="{% static 'assets/scripts/modernizr-2.6.2.js' %}"></script>
-    <script src="{% static 'assets/scripts/jquery-1.10.2.js' %}"></script>
-    <script src="{% static 'assets/scripts/respond.js' %}"></script> -->
     {% block scripts %}{% endblock %}
 </head>
 
@@ -38,6 +35,10 @@
                 <a href="{% url 'home' %}">Вернуться на главную</a>
             </aside>
             {% endblock %}
+
+            <noscript>
+                <p>Для полноценной работы сайта необходимо включить JavaScript.</p>
+            </noscript>
         </main>
     
         <!-- {% include 'app/components/footer.html' %} -->

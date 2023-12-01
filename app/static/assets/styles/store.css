@@ -473,7 +473,7 @@
     flex-grow: 1;
 }
 
-#cart-continue {
+#cart-continue, #cart-auth {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -482,11 +482,13 @@
     padding: 4px 16px;
     border-radius: 666px;
     font-size: 120%;
+    white-space: nowrap;
+    text-decoration: none;
     overflow: hidden;
     cursor: pointer;
     transition: .25s;
 }
-#cart-continue:hover {
+#cart-continue:hover, #cart-auth:hover {
     color: var(--colour-contrast-cyan);
     fill: var(--colour-contrast-cyan);
     background: var(--colour-pale-cyan);
@@ -738,7 +740,6 @@
 #cart-dialog-actions .standalone-button {
     width: 100%;
 }
-
 
 #thanks-dialog {
     display: block;

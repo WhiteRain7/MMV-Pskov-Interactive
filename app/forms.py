@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from .models import User, DLC, Accessory, Article, Comment
+from .models import User, DLC, Accessory, Article, Comment, Order
 
 
 class SignInForm (AuthenticationForm):
@@ -171,3 +171,9 @@ class CommentForm (forms.ModelForm):
         model = Comment
         fields = ('text',)
         labels = {'text': "Комментарий"}
+
+
+class updateOrderStatus (forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('status', 'comment')
