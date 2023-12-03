@@ -18,9 +18,9 @@
         {% endif %}
 
         {% if code == 401 %}
-            <a href="/auth/sign-in" class="standalone-button contrast-positive">Авторизоваться</a>
+            <a href="{% url 'sign-in' %}" class="standalone-button contrast-positive">Авторизоваться</a>
         {% elif code == 403 %}
-            <a href="/auth/sign-out" class="standalone-button contrast-positive">Перезайти под другим аккаунтом</a>
+            <a href="{% url 'sign-out' %}" class="standalone-button contrast-positive">Перезайти под другим аккаунтом</a>
         {% elif code == 500 %}
             <button type="button" class="standalone-button contrast-positive" onclick="window.location.reload();">Обновить страницу</button>
         {% endif %}
