@@ -13,7 +13,7 @@
     <img src="{{ user.photo.url }}" alt="" width="36px" height="36px" id="profile-image" aria-hidden="true" />
 </a>
 
-<form action="/auth/sign-out" method="GET" id="sign-out-form">
+<form action="{% url 'sign-out' %}" method="GET" id="sign-out-form">
     {% csrf_token %}
     <input type="submit" value="выйти" class="inline-button" />
 </form>

@@ -8,30 +8,12 @@ from django.contrib.auth import authenticate, login
 import sqlite3 as sql
 
 from app import models, forms
+from .httpCoroutine import Security, regular, HTTP_error
 
 from datetime import datetime
 from math import inf
 import json
-
-def regular (page):
-    pages = {
-        'home' : 'Домашняя страница',
-        'about' : 'О компании',
-        'videos': 'Видео',
-        'news': 'Новости',
-        'store': 'Магазин',
-        'login': 'Вход',
-        'profile': 'Профиль',
-        'registration': 'Регистрация',
-        'manage': 'Управление',
-    }
-
-    return {
-        'year': datetime.now().year,
-        'page': page,
-        'page_title': pages[page]
-    }
-    
+   
 TIMELINE = [
     { 'year': None, 'hex': '#c72727', 'width': '10%'   , 'name': 'BC'          , 'human': 'До н.э.' },
     { 'year': 0   , 'hex': '#beb317', 'width': '18.13%', 'name': 'ancient'     , 'human': 'Античность' },
@@ -98,11 +80,16 @@ def get_timeline (syear, eyear):
 
 def redirect_home (request): return redirect('home')
 
+def missing_page (request):
+    return HTTP_error(request, 404, 'Страница не найдена')
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def home (request):
     """
         Renders the home page.
     """
-    assert isinstance(request, HttpRequest)
 
     return render(
         request,
@@ -114,12 +101,14 @@ def home (request):
         }
     )
 
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def about (request):
     """
         Renders the about page.
     """
-    assert isinstance(request, HttpRequest)
-
+    
     return render(
         request,
         'app/pages/presentation/about.html',
@@ -127,12 +116,14 @@ def about (request):
             **regular('about'),
         }
     )
-    
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def videos (request):
     """
         Renders the video page.
     """
-    assert isinstance(request, HttpRequest)
 
     return render(
         request,
@@ -142,11 +133,13 @@ def videos (request):
         }
     )
 
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST' ])
+@Security.access_level(0, exact = True, redirecting = 'home')
 def sign_in (request):
     """
         Renders the authorization page.
     """
-    assert isinstance(request, HttpRequest)
 
     if request.method == "POST":
         form = forms.SignInForm(request.POST)
@@ -175,11 +168,13 @@ def sign_in (request):
         }
     )
 
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST' ])
+@Security.access_level(0, exact = True, redirecting = 'home')
 def sign_up (request):
     """
         Renders the registration page.
     """
-    assert isinstance(request, HttpRequest)
 
     if request.method == "POST":
         form = forms.SignUpForm(request.POST)
@@ -187,7 +182,8 @@ def sign_up (request):
         if form.is_valid():
             saved = form.save(commit=False)
 
-            saved.photo = request.FILES['photo'] or None
+            try: saved.photo = request['photo']
+            except: pass
             saved.is_staff = False
             saved.is_active = True
             saved.is_superuser = False
@@ -213,11 +209,14 @@ def sign_up (request):
         }
     )
 
+@Security.valid
+@Security.exists(models.User)
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(1)
 def profile (request, id = None):
     """
         Renders the profile page.
     """
-    assert isinstance(request, HttpRequest)
 
     statuses = {
         'auto-resolve' : {
@@ -364,25 +363,34 @@ def profile (request, id = None):
         }
     )
 
+@Security.valid
+@Security.exists(models.User)
+@Security.allowed_methods([ 'POST', 'PUT', 'PATCH' ])
+@Security.access_level(1)
 def edit_profile (request):
     """
         Edits profile with given data
     """
-    assert isinstance(request, HttpRequest)
 
-    if request.method != 'POST' or request.method != 'PUT': return
+    if (
+        not request.headers.get('referrer').endswith('/profile') or
+        not request.user.is_staff
+    ):
+        return HttpResponse(status = 403)
 
     user = models.User.objects.get(id = request.user.id)
 
-    if not user: return HttpResponse(status = 401)
+    form = forms.updateUserPhoto(request)
 
-    # user.first = data['first'] or user.first
-    # user.last = data['last'] or user.last
-    user.photo = request.FILES['photo'] or user.photo
-    user.save(force_update=True)
+    if form.is_valid():
+        user.photo = request.FILES['photo']
+        user.save()
 
     return HttpResponse(status = 200)
 
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def news (request, tag = None):
     """
         Renders the posts page.
@@ -429,6 +437,10 @@ def news (request, tag = None):
         }
     )
 
+@Security.valid
+@Security.exists(models.Article)
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def article (request, id):
     """
         Renders the blogpost page.
@@ -450,6 +462,9 @@ def article (request, id):
         }
     )
 
+@Security.valid
+@Security.allowed_methods([ 'POST' ])
+@Security.access_level(1)
 def comment (request, id):
     """
         Processes the comment form.
@@ -470,6 +485,9 @@ def comment (request, id):
 
     return redirect('article', id)
 
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(0)
 def store (request):
     """
         Renders the store page.
@@ -554,6 +572,9 @@ def store (request):
         }
     )
 
+@Security.valid
+@Security.allowed_methods([ 'POST' ])
+@Security.access_level(1)
 def order (request):
     """
         Places the order.
@@ -605,6 +626,10 @@ def order (request):
 
     return HttpResponse(status = 200)
 
+@Security.valid
+@Security.exists(models.Order)
+@Security.allowed_methods([ 'POST' ])
+@Security.access_level(2)
 def update_order_status (request, id):
     """
         Updates order status.
@@ -624,6 +649,9 @@ def update_order_status (request, id):
 
     return HttpResponse(status = 200)
 
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
 def manage (request):
     """
         Renders the manage page.

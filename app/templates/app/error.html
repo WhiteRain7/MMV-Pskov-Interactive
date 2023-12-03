@@ -1,0 +1,30 @@
+{% extends "app/layout.html" %}
+
+{% block links %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/errors.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+    <section id="error">
+        <hgroup id="error-header">
+            <h1 id="error-code">{{ code }}</h1>
+            <h2 id="error-message">{{ message }}</h2>
+        </hgroup>
+
+        {% if description %}
+            <p id="error-description">{{ description }}</p>
+        {% endif %}
+
+        {% if code == 401 %}
+            <a href="/auth/sign-in" class="standalone-button contrast-positive">Авторизоваться</a>
+        {% elif code == 403 %}
+            <a href="/auth/sign-out" class="standalone-button contrast-positive">Перезайти под другим аккаунтом</a>
+        {% elif code == 500 %}
+            <button type="button" class="standalone-button contrast-positive" onclick="window.location.reload();">Обновить страницу</button>
+        {% endif %}
+
+        <a href="/" class="standalone-button">Вернуться на главную</a>
+    </section>
+{% endblock %}

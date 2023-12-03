@@ -173,7 +173,7 @@ class CommentForm (forms.ModelForm):
         labels = {'text': "Комментарий"}
 
 
-class updateOrderStatus (forms.ModelForm):
+class updateUserPhoto (forms.ModelForm):
     class Meta:
-        model = Order
-        fields = ('status', 'comment')
+        model = User
+        fields = ('photo',)

@@ -3,7 +3,7 @@ Definition of urls for Pskov_Interactive.
 """
 
 from datetime import datetime
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import CreateView
@@ -25,7 +25,7 @@ urlpatterns = [
          ),
          name='sign-in'),
     path('auth/sign-up/', views.sign_up, name = 'sign-up'),
-    path('auth/sign-out/', LogoutView.as_view(next_page='/auth/sign-in'), name = 'sign-out'),
+    path('auth/sign-out/', LogoutView.as_view(next_page='/auth/sign-in/'), name = 'sign-out'),
     path('profile/<int:id>/', views.profile, name='profile'),
     path('profile/', views.profile, name='profile'),
     path('edit/profile/', views.edit_profile, name='edit_profile'),
@@ -40,8 +40,10 @@ urlpatterns = [
     path('update/order/<int:id>', views.update_order_status, name='update_order'),
 
     path('manage/', views.manage, name='manage'),
-    path('admin/', admin.site.urls, name='admin'),
+    path('admin/', admin.site.urls, name='admin')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += [ re_path('.*', views.missing_page, name='missing_page') ]

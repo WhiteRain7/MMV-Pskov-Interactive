@@ -1,0 +1,34 @@
+#error {
+    box-sizing: border-box;
+    width: calc(100% - 40px);
+    max-width: 600px;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    background: var(--colour-back);
+    box-shadow: 0 1px 4px 0 #888;
+}
+
+#error-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 200%;
+    text-align: center;
+}
+
+#error-code {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+#error-description {
+    margin-block: 10px;
+    font-size: 120%;
+}
