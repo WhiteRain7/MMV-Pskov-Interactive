@@ -20,7 +20,7 @@
         <menu id="section-company-games">
             {% for game in games %}
             <li role="menuitem" class="section-company-game" title="{{ game.name }}">
-                <a href="/news/{{ game.tag }}" class="section-company-game-content serif-styled">
+                <a href="/news/{{ game.tag }}/" class="section-company-game-content serif-styled">
                     <img src="{{ game.image.url }}" alt="{{ game.tag }}" role="figure" width="80px" height="80px" aria-hidden="true" />
                     <span>{{ game.name }}</span>
                 </a>
@@ -37,7 +37,7 @@
                 <figure role="figure" style="display: none">
                     <img src="{{ article.image.url }}" alt="{{ article.title }}" />
                     <figcaption>{{ article.title }}</figcaption>
-                    <a href="/news/article/{{ article.id }}" class="inline-button organic-neutral">далее »</a>
+                    <a href="/news/article/{{ article.id }}/" class="inline-button organic-neutral">далее »</a>
                 </figure>
                 {% endfor %}
             </div>
@@ -55,7 +55,7 @@
             <hr class="contrast-extra" />
             <p>Подробнее о нашей компании можно узнать в специальном разделе "о нас".</p>
             <hr class="contrast-extra" />
-            <a href="/about" class="inline-button contrast-extra">подробнее о нас</a>
+            <a href="/about/" class="inline-button contrast-extra">подробнее о нас</a>
         </div>
     </section>
 
@@ -67,7 +67,7 @@
             <hr />
             <p>На данный момент в разработке находится 3 разных стратегии - Holy Roman Empire, Terraforming Mars и Rise of South, каждая из которых достойна вашего внимания! Мы уверены, что вам понравятся все эти игры, а также наши новости по ним.</p>
             <hr />
-            <a href="/news" class="inline-button">наши новости</a>
+            <a href="/news/" class="inline-button">наши новости</a>
         </section>
 
         <section class="text-block regular-block">
@@ -77,7 +77,7 @@
             <hr />
             <p>Все подробности в нашей ленте новостей.</p>
             <hr />
-            <a href="/news/article/3" class="inline-button">новость о RoS</a>
+            <a href="/news/article/3/" class="inline-button">новость о RoS</a>
         </section>
     </aside>
 
@@ -91,7 +91,7 @@
             <hr />
             <p>Если у вас есть хорошие идеи и вы хотите сделать наш проект лучше - напишите об этом прямо сейчас!</p>
             <hr />
-            <a href="/feedback">
+            <a href="/feedback/">
                 <input type="button" class="inline-button" value="оставить отзыв">
             </a>
         </section>
