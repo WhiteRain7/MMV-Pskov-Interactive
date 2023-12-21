@@ -393,9 +393,8 @@ def edit_profile (request):
 @Security.access_level(0)
 def news (request, tag = None):
     """
-        Renders the posts page.
+        Renders the news page.
     """
-    assert isinstance(request, HttpRequest)
 
     game_tags = [
         {
@@ -463,13 +462,13 @@ def article (request, id):
     )
 
 @Security.valid
+@Security.exists(models.Article)
 @Security.allowed_methods([ 'POST' ])
 @Security.access_level(1)
 def comment (request, id):
     """
         Processes the comment form.
     """
-    assert isinstance(request, HttpRequest)
 
     if request.method == "POST":
         form = forms.CommentForm(request.POST)
@@ -580,10 +579,6 @@ def order (request):
         Places the order.
     """
 
-    assert isinstance(request, HttpRequest)
-
-    if request.method != "POST": return None
-
     body = json.loads(request.read())
 
     games = []
@@ -635,11 +630,6 @@ def update_order_status (request, id):
         Updates order status.
     """
 
-    assert isinstance(request, HttpRequest)
-
-    if request.method != "POST": return HttpResponse(status = 405)
-    if not (request.user.is_staff or request.user.is_editor): return HttpResponse(status = 403)
-
     body = json.loads(request.read())
 
     order = models.Order.objects.get(id = id)
@@ -656,8 +646,6 @@ def manage (request):
     """
         Renders the manage page.
     """
-
-    assert isinstance(request, HttpRequest)
 
     statuses = {
         'auto-resolve' : {

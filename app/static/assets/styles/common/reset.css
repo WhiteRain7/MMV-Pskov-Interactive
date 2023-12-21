@@ -12,6 +12,8 @@
     fill: inherit;
 
     border: none;
+    
+    cursor: unset;
 }
 
 html {

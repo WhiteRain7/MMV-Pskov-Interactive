@@ -28,7 +28,6 @@ urlpatterns = [
     path('auth/sign-out/', LogoutView.as_view(next_page='/auth/sign-in/'), name = 'sign-out'),
     path('profile/<int:id>/', views.profile, name='profile'),
     path('profile/', views.profile, name='profile'),
-    path('edit/profile/', views.edit_profile, name='edit_profile'),
     path('news/', views.news, name='news'),
     path('news/<str:tag>/', views.news, name='news'),
     path('news/article/<int:id>', views.article, name='article'),
@@ -36,6 +35,7 @@ urlpatterns = [
     path('store/', views.store, name='store'),
     path('accounts/profile/', views.redirect_home, name='redirect_home'),
 
+    path('edit/profile/', views.edit_profile, name='edit_profile'),
     path('place/order/', views.order, name='order'),
     path('update/order/<int:id>', views.update_order_status, name='update_order'),
 

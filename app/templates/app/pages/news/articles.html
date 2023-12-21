@@ -16,7 +16,7 @@
         {% for tag in game_tags %}
         {% if tag.tag == filter_tag %}
         <a
-            href="/news"
+            href="/news/"
             style="background: {{ tag.colour }};"
             class="article-tag selected">
             
@@ -24,7 +24,7 @@
         </a>
         {% else %}
         <a
-            href="/news/{{ tag.tag }}"
+            href="/news/{{ tag.tag }}/"
             style="background: {{ tag.colour }};"
             class="article-tag">
             
@@ -37,7 +37,7 @@
         {% for tag in extra_tags %}
         {% if tag.tag == filter_tag %}
         <a
-            href="/news"
+            href="/news/"
             style="background: {{ tag.colour }};"
             class="article-tag selected">
             
@@ -45,7 +45,7 @@
         </a>
         {% else %}
         <a
-            href="/news/{{ tag.tag }}"
+            href="/news/{{ tag.tag }}/"
             style="background: {{ tag.colour }};"
             class="article-tag">
             
@@ -64,7 +64,7 @@
         <section id="section-no-articles">
             <p>Ничего не найдено</p>
             <p>Возможно, вы выбрали некорректный тег - попробуйте ещё раз через специальное меню, либо:</p>
-            <a class="inline-button contrast-extra" href="/news">вывести все новости</a>
+            <a class="inline-button contrast-extra" href="/news/">вывести все новости</a>
         </section>
         {% endif %}
 
@@ -72,7 +72,7 @@
         <article class="article-block">
             <div class="article-tags">
                 <a
-                    href="/news/{{ article.about.tag }}"
+                    href="/news/{{ article.about.tag }}/"
                     style="background: {{ article.about.colour }};"
                     class="article-tag">
                     
@@ -81,7 +81,7 @@
 
                 {% if article.tag %}
                 <a
-                    href="/news/{{ article.tag.tag }}"
+                    href="/news/{{ article.tag.tag }}/"
                     style="background: {{ article.tag.colour }};"
                     class="article-tag">
                     
@@ -98,7 +98,7 @@
                 {{ article.content }}
                 <span class="article-pale"></span>
             </p>
-            <a href="/news/article/{{ article.id }}" class="article-read">читать далее »</a>
+            <a href="/news/article/{{ article.id }}/" class="article-read">читать далее »</a>
         </article>
         {% endfor %}
     </div>

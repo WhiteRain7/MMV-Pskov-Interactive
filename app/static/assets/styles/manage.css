@@ -343,3 +343,44 @@
     opacity: 0;
     pointer-events: none;
 }
+
+
+@media screen and (max-width: 600px) {
+    #manage-container {
+        width: calc(100% - 16px);
+        padding: 8px;
+        margin: 8px;
+    }
+
+    .manage-section {
+        padding: 4px;
+    }
+
+    #user-orders,
+    #user-orders thead,
+    #user-orders tbody,
+    #user-orders tr,
+    #user-orders th,
+    #user-orders td {
+        display: block;
+        box-sizing: border-box;
+        width: 100% !important;
+        margin-bottom: 4px;
+    }
+
+    #user-orders tr {
+        border-bottom: 4px solid var(--colour-contrast-decoration-back);
+    }
+
+    #order-dialog-title {
+        font-size: 120%;
+    }
+ 
+    #order-dialog-statuses {
+        display: block;
+    }
+
+    .order-status-button {
+        margin-bottom: 4px;
+    }
+}
