@@ -220,7 +220,7 @@
     }
  
     #order-dialog-statuses {
-        display: block;
+        display: block !important;
     }
 
     .order-status-button {
