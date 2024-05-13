@@ -1,0 +1,24 @@
+#site-games :is(th, td) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#site-games :is(th, td):nth-child(1) {
+    width: 60px;
+    text-align: left;
+}
+#site-games :is(th, td):nth-child(2) {
+    width: 46px;
+    padding: 0;
+}
+#site-games :is(th, td):nth-child(3) {
+    text-align: left;
+}
+
+#site-games td > a {
+    color: var(--colour-contrast-decoration-back);
+    text-decoration: none;
+}
+#site-games td > a:hover {
+    border-bottom: 1px solid var(--colour-contrast-decoration-back);
+}

@@ -1,0 +1,158 @@
+#user-orders :is(th, td):nth-child(1) {
+    width: 60px;
+    text-align: left;
+    vertical-align: top;
+}
+#user-orders :is(th, td):nth-child(2) {
+    text-align: center;
+    vertical-align: middle;
+}
+#user-orders :is(th, td):nth-child(3) {
+    text-align: left;
+    vertical-align: top;
+}
+#user-orders :is(th, td):nth-child(4) {
+    width: 100px;
+    text-align: center;
+    vertical-align: center;
+}
+#user-orders :is(th, td):nth-child(5) {
+    width: 200px;
+    text-align: center;
+    vertical-align: top;
+    position: relative;
+}
+
+#user-orders td:nth-child(2) > a {
+    color: var(--colour-contrast-decoration-back);
+    text-decoration: none;
+}
+#user-orders td:nth-child(2) > a:hover {
+    border-bottom: 1px solid var(--colour-contrast-decoration-back);
+}
+
+#user-orders td:nth-child(4) {
+    font-size: 110%;
+    font-weight: bold;
+}
+
+
+
+#order-dialog {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    background: transparent;
+    transform: none !important;
+    overflow: hidden;
+    z-index: 1000;
+}
+#order-dialog::backdrop {
+    display: none;
+}
+#order-dialog:not([open]) {
+    pointer-events: none;
+    user-select: none;
+    touch-action: none;
+}
+
+#order-dialog-dark {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    transition: .25s;
+    z-index: 1;
+}
+#order-dialog:not([open]) #order-dialog-dark {
+    opacity: 0;
+}
+
+#order-dialog-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    width: calc(100% - 40px);
+    max-width: 700px;
+    height: calc(100% - 80px);
+    padding: 10px;
+    border-radius: 20px;
+    background: var(--colour-back);
+    color: var(--colour-front);
+    overflow: auto;
+    transition: .25s;
+    position: relative;
+    z-index: 2;
+}
+#order-dialog:not([open]) #order-dialog-content {
+    transform: translateY(-20px);
+    opacity: 0;
+}
+
+#order-dialog-title {
+    width: 100%;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--colour-contrast-decoration-back);
+    font-size: 150%;
+    text-align: center;
+}
+
+#order-dialog-statuses {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, auto));
+    grid-auto-flow: row;
+    gap: 10px;
+    width: 100%;
+}
+
+#order-dialog-comment {
+    resize: vertical;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 200px;
+    max-height: 600px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--colour-backdrop);
+    color: var(--colour-front);
+}
+
+#order-dialog-empty {
+    display: flex;
+    flex-grow: 1;
+}
+
+#order-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+    width: 100%;
+}
+
+#order-dialog-actions > li {
+    display: flex;
+    flex-grow: 1;
+    width: 130px;
+}
+
+#order-dialog-actions .standalone-button {
+    width: 100%;
+}

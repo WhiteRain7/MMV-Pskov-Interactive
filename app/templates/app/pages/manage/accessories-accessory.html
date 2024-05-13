@@ -1,0 +1,40 @@
+{% extends "app/form.html" %}
+
+{% block title %}
+    {% if model %}Редактирование товара №{{ model.id }}
+    {% else %}Создание товара
+    {% endif %}
+{% endblock %}
+{% block submit %} 
+    {% if model %}изменить
+    {% else %}создать
+    {% endif %}
+{% endblock %}
+
+{% block fields %}
+    <fieldset class="form-fieldset">
+        {% include 'app/components/fields/any.html'   with id="name"    label="Название"      input=form.name    %}
+        {% include 'app/components/fields/image.html' with id="image"   label="Изображение"   input=form.image   %}
+        {% include 'app/components/fields/any.html'   with id="price"   label="Стоимость"     input=form.price   %}
+        {% include 'app/components/fields/any.html'   with id="stock"   label="На складе"     input=form.stock   %}
+        {% include 'app/components/fields/any.html'   with id="about"   label="Игра"          input=form.about   %}
+        {% include 'app/components/fields/any.html'   with id="tag"     label="Тег"           input=form.tag     %}
+        {% include 'app/components/fields/any.html'   with id="virtual" label="Виртуальный"   input=form.virtual %}
+        {% include 'app/components/fields/any.html'   with id="content" label="Описание"      input=form.content %}
+    </fieldset>
+{% endblock %}
+
+{% block errors %}
+    {% if form.errors %}
+    <div id="form-errors">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-79q-16 0-30.5-6T423-102L102-423q-11-12-17-26.5T79-480q0-16 6-31t17-26l321-321q12-12 26.5-17.5T480-881q16 0 31 5.5t26 17.5l321 321q12 11 17.5 26t5.5 31q0 16-5.5 30.5T858-423L537-102q-11 11-26 17t-31 6Zm0-80 321-321-321-321-321 321 321 321Zm-40-281h80v-240h-80v240Zm40 120q17 0 28.5-11.5T520-360q0-17-11.5-28.5T480-400q-17 0-28.5 11.5T440-360q0 17 11.5 28.5T480-320Zm0-160Z"/></svg>
+        <p>ошибка заполнения</p>
+    </div>
+    {% elif success %}
+    <div id="form-success">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#5f6368"><path d="M480.07-100q-78.84 0-148.21-29.92t-120.68-81.21q-51.31-51.29-81.25-120.63Q100-401.1 100-479.93q0-78.84 29.93-148.21 29.92-69.37 81.22-120.68t120.65-81.25Q401.15-860 480-860q63.2 0 119.6 19 56.4 19 103.48 53l-43.39 44.39q-38.77-26.7-83.99-41.54Q530.48-800 480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-21.08-2.77-41.69t-8.31-40.08l48.46-48.84q11 30.84 16.81 63.46Q860-514.54 860-480q0 78.85-29.92 148.2t-81.21 120.65q-51.29 51.3-120.63 81.22Q558.9-100 480.07-100Zm-56.84-209.85L267.08-466l42.15-42.15 114 114 394.62-395.23L860-747.23 423.23-309.85Z"/></svg>
+        <p>успешно сохранено</p>
+    </div>
+    {% endif %}
+{% endblock %}
+

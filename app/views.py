@@ -501,7 +501,7 @@ def store (request):
         'closed-development': 'В закрытой разработке',
         'open-development': 'В открытой разработке',
         'beta-testing': 'Тестирование',
-        'published': '',
+        'published': 'Доступна',
         'not-supported': 'Не поддерживается',
     }
 
@@ -639,10 +639,24 @@ def update_order_status (request, id):
 
     return HttpResponse(status = 200)
 
+
+
 @Security.valid
 @Security.allowed_methods([ 'GET' ])
 @Security.access_level(2)
 def manage (request):
+    return render(
+        request,
+        'app/pages/manage/index.html',
+        {
+            **regular('manage')
+        }
+    )
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
+def manage_orders (request):
     """
         Renders the manage page.
     """
@@ -777,12 +791,285 @@ def manage (request):
 
     return render(
         request,
-        'app/pages/manage/manage.html',
+        'app/pages/manage/orders.html',
         {
-            **regular('manage'),
+            **regular('manage_orders'),
+            'page': 'manage',
             'min_orders': [{ 'id': o['id'], 'comment': o['comment'] } for o in parsed_orders],
             'orders': parsed_orders,
             'statuses': statuses,
             'games': games
+        }
+    )
+
+
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
+def manage_users (request):
+    """
+        Renders the users page.
+    """
+
+    return render(
+        request,
+        'app/pages/manage/users.html',
+        {
+            **regular('manage_users'),
+            'page': 'manage',
+            'users': models.User.objects.all()
+        }
+    )
+
+@Security.valid
+@Security.allowed_methods([ 'POST', 'DELETE' ])
+@Security.access_level(2)
+def manage_user (request, id):
+    """
+        Renders the user page.
+    """
+
+    if request.method == 'POST':
+        user = models.User.objects.get(id = id)
+        user.is_editor = json.loads(request.read())['editor']
+        user.save()
+
+    elif request.method == 'DELETE':
+        user = models.User.objects.get(id = id)
+        user.delete()
+
+    return HttpResponse(status = 200)
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
+def manage_news (request):
+    '''
+        Renders the manage news page.
+    '''
+
+    return render(
+        request,
+        'app/pages/manage/news.html',
+        {
+            **regular('manage_news'),
+            'page': 'manage',
+            'news': models.Article.objects.all()
+        }
+    )
+
+
+def _routine_entity (request, model, formConstructor, id):
+    exists = model.objects.filter(id = id).exists()
+
+    if request.method == 'POST':
+        if exists:
+            form = formConstructor(request.POST, request.FILES, instance = model.objects.get(id = id))
+            if form.is_valid():
+                form.save()
+                return {
+                    'model': model.objects.get(id = id),
+                    'form': form,
+                    'success': True
+                }
+            
+        else:
+            form = formConstructor(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return {
+                    'model': model.objects.get(id = form.instance.id),
+                    'form': form,   
+                    'success': True,
+                    'redirect': form.instance.id
+                }
+            
+        return {
+            'model': None,
+            'form': form,
+            'success': False
+        }
+    
+    else:
+        if exists:
+            return {
+                'model': model.objects.get(id = id),
+                'form': formConstructor(instance = model.objects.get(id = id))
+            }
+
+        else:
+            return {
+                'model': None,
+                'form': formConstructor()
+            }
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST', 'DELETE' ])
+@Security.access_level(2)
+def manage_article (request, id):
+    '''
+        Renders the manage article page.
+    '''
+
+    if request.method == 'DELETE':
+        models.Article.objects.get(id = id).delete()
+        return redirect('manage_news')
+    
+    data = _routine_entity(request, models.Article, forms.ArticleForm, id)
+
+    if 'redirect' in data:
+        return redirect('manage_article', data['redirect'])
+
+    return render(
+        request,
+        'app/pages/manage/news-article.html',
+        {
+            **regular('manage_article'),
+            'page': 'manage',
+            **data
+        }
+    )
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
+def manage_games (request):
+    '''
+        Renders the manage games page.
+    '''
+
+    return render(
+        request,
+        'app/pages/manage/games.html',
+        {
+            **regular('manage_games'),
+            'page': 'manage',
+            'games': models.Game.objects.all()
+        }
+    )
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST', 'DELETE' ])
+@Security.access_level(2)
+def manage_game (request, id):
+    '''
+        Renders the manage game page.
+    '''
+
+    if request.method == 'DELETE':
+        models.Game.objects.get(id = id).delete()
+        return redirect('manage_news')
+    
+    data = _routine_entity(request, models.Game, forms.GameForm, id)
+
+    if 'redirect' in data:
+        return redirect('manage_game', data['redirect'])
+
+    return render(
+        request,
+        'app/pages/manage/games-game.html',
+        {
+            **regular('manage_game'),
+            'page': 'manage',
+            **data
+        }
+    )
+
+
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET' ])
+@Security.access_level(2)
+def manage_dlcs (request):
+    '''
+        Renders the manage dlcs page.
+    '''
+
+    return render(
+        request,
+        'app/pages/manage/dlcs.html',
+        {
+            **regular('manage_dlcs'),
+            'page': 'manage',
+            'dlcs': models.DLC.objects.all()
+        }
+    )
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST', 'DELETE' ])
+@Security.access_level(2)
+def manage_dlc (request, id):
+    '''
+        Renders the manage dlc page.
+    '''
+
+    if request.method == 'DELETE':
+        models.DLC.objects.get(id = id).delete()
+        return redirect('manage_dlcs')
+    
+    data = _routine_entity(request, models.DLC, forms.DLCForm, id)
+
+    if 'redirect' in data:
+        return redirect('manage_dlc', data['redirect'])
+
+    return render(
+        request,
+        'app/pages/manage/dlcs-dlc.html',
+        {
+            **regular('manage_dlc'),
+            'page': 'manage',
+            **data
+        }
+    )
+
+
+def manage_accessories (request):
+    '''
+        Renders the manage accessories page.
+    '''
+
+    return render(
+        request,
+        'app/pages/manage/accessories.html',
+        {
+            **regular('manage_accessories'),
+            'page': 'manage',
+            'products': models.Accessory.objects.all()
+        }
+    )
+
+
+@Security.valid
+@Security.allowed_methods([ 'GET', 'POST', 'DELETE' ])
+@Security.access_level(2)
+def manage_accessory (request, id):
+    '''
+        Renders the manage accessory page.
+    '''
+
+    if request.method == 'DELETE':
+        models.Accessory.objects.get(id = id).delete()
+        return redirect('manage_news')
+    
+    data = _routine_entity(request, models.Accessory, forms.AccessoryForm, id)
+
+    if 'redirect' in data:
+        return redirect('manage_accessory', data['redirect'])
+
+    return render(
+        request,
+        'app/pages/manage/accessories-accessory.html',
+        {
+            **regular('manage_accessory'),
+            'page': 'manage',
+            **data
         }
     )

@@ -14,7 +14,22 @@ def regular (page):
         'login': 'Вход',
         'profile': 'Профиль',
         'registration': 'Регистрация',
+
         'manage': 'Управление',
+
+        'manage_games': 'Управление играми',
+        'manage_dlcs': 'Управление дополнениями',
+        'manage_accessories': 'Управление аксессуарами',
+        'manage_orders': 'Управление заказами',
+        'manage_news': 'Управление новостями',
+        'manage_users': 'Управление пользователями',
+
+        'manage_game': 'Редактирование игры',
+        'manage_dlc': 'Редактирование дополнения',
+        'manage_accessory': 'Редактирование товара',
+        'manage_article': 'Редактирование новости',
+        'manage_user': 'Редактирование пользователя',
+
         'error': 'Ошибка',
     }
 
@@ -104,7 +119,7 @@ class Security:
                         }
                     )
 
-                if request.method.upper() not in [ 'GET', 'POST', 'PUT', 'PATCH' ]:
+                if request.method.upper() not in [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ]:
                     return HTTP_error(request, 501, 'Метод не поддерживается', f'Метод {request.method} не поддерживается сервером, используйте GET, POST или OPTIONS.')
                 
                 elif request.method.upper() in methods:

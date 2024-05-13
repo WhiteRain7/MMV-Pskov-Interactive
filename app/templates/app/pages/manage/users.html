@@ -1,0 +1,127 @@
+{% extends "app/layout.html" %}
+
+{% block links %}{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.users.css' %}" />
+{% endblock %}
+
+{% block scripts %}{% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/scroll-top.js' %}"></script>
+    <script type="text/javascript">
+        window.addEventListener('load', () => {
+            let elements
+
+            elements = Object.values(document.getElementsByClassName('delete-button'))
+            
+            elements.forEach(element => {
+                let id = element.value
+
+                element.addEventListener('click', () => {
+                    fetch('/manage/user/' + id, {
+                        method: 'DELETE',
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    }).then(() => {
+                        element.parentElement.parentElement.remove()
+                    })
+                })
+            })
+
+            elements = [
+                ...Object.values(document.getElementsByClassName('upgrade-button')),
+                ...Object.values(document.getElementsByClassName('downgrade-button')),
+            ]
+                
+            elements.forEach(element => {
+                let id = element.value
+
+                element.addEventListener('click', () => {
+                    fetch('/manage/user/' + id, {
+                        method: 'POST',
+                        body: JSON.stringify({ editor: element.classList.contains('upgrade-button') }),
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    }).then(() => {
+                        if (element.classList.contains('upgrade-button')) {
+                            element.classList.remove('upgrade-button')
+                            element.classList.add('downgrade-button')
+                            element.innerHTML = 'понизить'
+                            element.parentElement.previousElementSibling.innerHTML = 'редактор'
+                        }
+                        else {
+                            element.classList.remove('downgrade-button')
+                            element.classList.add('upgrade-button')
+                            element.innerHTML = 'повысить'
+                            element.parentElement.previousElementSibling.innerHTML = 'пользователь'
+                        }
+                    })
+                })
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section id="manage-container">
+        <section class="manage-section">
+            <h1>Управление пользователями</h1>
+
+            <table id="site-users" class="manage-table">    
+                <thead class="composite-head"><tr>
+                    <th>№</th>
+                    <th>Фото</th>
+                    <th>Логин</th>
+                    <th>Имя и фамилия</th>
+                    <th>Роль</th>
+                    <th>Редактор</th>
+                    <th></th>
+                </tr></thead>
+    
+                <tbody class="composite-body">
+                    {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+    
+                        <td>
+                            <figure class="order-item-figure">
+                                <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="order-item-image" />
+                            </figure>
+                        </td>
+
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.first }}, {{ user.last }}</td>
+                        <td>
+                            {% if user.is_staff or user.is_superuser %}администратор
+                            {% elif user.is_editor %}редактор
+                            {% else %}пользователь
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not user.is_staff and not user.is_superuser %}
+                                {% if user.is_editor %}
+                                <button type="button" class="downgrade-button" value="{{ user.id }}">
+                                    понизить
+                                </button>
+                                {% else %}
+                                <button type="button" class="upgrade-button" value="{{ user.id }}">
+                                    повысить
+                                </button>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td class="delete-td">
+                            {% if not user.is_staff and not user.is_superuser %}
+                            <button type="button" class="delete-button" value="{{ user.id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <button type="button" id="manage-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+    </div>
+{% endblock %}

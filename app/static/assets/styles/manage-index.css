@@ -1,0 +1,49 @@
+#manage-tabs {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 20px;
+    background: var(--colour-back);
+    color: var(--colour-front);
+}
+
+.manage-tab {
+    display: flex;
+    flex-grow: 1;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    width: 500px;
+    padding: 30px;
+    border-radius: 20px;
+    background: var(--colour-element);
+    color: var(--colour-front);
+    box-shadow: 0 2px 8px 0 #888;
+    text-decoration: none;
+    font-size: 120%;
+    transition: .3s;
+}
+
+.manage-tab:hover {
+    filter: brightness(1.1);
+    transform: translateY(-6px);
+}
+
+.manage-tab:active {
+    filter: brightness(.85);
+    box-shadow: 0 8px 10px 0 #666;
+}
+
+.manage-tab.games    { background: #fff4eb; }
+.manage-tab.dlcs     { background: #ffefeb; }
+.manage-tab.products { background: #eefff3; }
+.manage-tab.news     { background: #eaf6ff; }
+.manage-tab.orders   { background: #fbedff; }
+.manage-tab.users    { background: #ffedf2; }

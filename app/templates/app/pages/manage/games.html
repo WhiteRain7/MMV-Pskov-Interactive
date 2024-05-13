@@ -1,0 +1,82 @@
+{% extends "app/layout.html" %}
+
+{% block links %}{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.games.css' %}" />
+{% endblock %}
+
+{% block scripts %}{% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/scroll-top.js' %}"></script>
+    <script type="text/javascript">
+        window.addEventListener('load', () => {
+            const elements = Object.values(document.getElementsByClassName('delete-button'))
+            
+            elements.forEach(element => {
+                let id = element.value
+
+                element.addEventListener('click', () => {
+                    fetch('/manage/game/' + id, {
+                        method: 'DELETE',
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    }).then(() => {
+                        element.parentElement.parentElement.remove()
+                    })
+                })
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section id="manage-container">
+        <section class="manage-section">
+            <h1>Управление играми</h1>
+
+            <table id="site-games" class="manage-table">    
+                <thead class="composite-head"><tr>
+                    <th>№</th>
+                    <th>Фото</th>
+                    <th>Название</th>
+                    <th>Статус</th>
+                    <th>Театр</th>
+                    <th>Период</th>
+                    <th></th>
+                </tr></thead>
+    
+                <tbody class="composite-body">
+                    <tr>
+                        <td colspan="7" style="text-align: center;">
+                            <a href="/manage/game/0">создать новую игру</a>
+                        </td>
+                    </tr>
+
+                    {% for game in games %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+    
+                        <td>
+                            <figure class="order-item-figure">
+                                <img src="{{ game.image.url }}" alt="{{ game.name }}" class="order-item-image" />
+                            </figure>
+                        </td>
+
+                        <td><a href="/manage/game/{{ game.id }}">{{ game.name }} / {{ game.abbreviation }}</a></td>
+                        <td>{{ game.status }}</td>
+                        <td>{{ game.theatre }}</td>
+                        <td>{{ game.timeline }} ({{ game.timeline_start }} - {{ game.timeline_end }})</td>
+                        <td class="delete-td">
+                            <button type="button" class="delete-button" value="{{ game.id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <button type="button" id="manage-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+    </div>
+{% endblock %}

@@ -19,21 +19,6 @@ function assign (elem, callback) {
 }
 
 
-function scrollToTop () {
-    document.getElementById('main').scrollTo({behavior: 'smooth', top: 0});
-}
-
-function checkScroll () {
-    const scrollToTopElem = document.getElementById('manage-scroll-to-top');
-
-    if (document.getElementById('main').scrollTop > 0) {
-        scrollToTopElem.classList.add('shown')
-    } else {
-        scrollToTopElem.classList.remove('shown')
-    }
-}
-
-
 function create_status_item (statusname) {
     const statuscontent = STATUSES[statusname]
 
@@ -109,10 +94,7 @@ function on_close_dialog () {
 }
 
 
-window.onload = function() {
-    document.getElementById('main').addEventListener('scroll', checkScroll)
-    document.getElementById('manage-scroll-to-top').addEventListener('click', scrollToTop)
-
+window.addEventListener('load', () => {
     const elements = Object.values(document.getElementsByClassName('status-dialog-button'))
     
     elements.forEach(element => {
@@ -125,4 +107,4 @@ window.onload = function() {
     assign('order-dialog-dark', close_status)
 
     try { document.getElementById('cart-dialog').addEventListener('close', on_close_dialog) } catch {}
-}
+})

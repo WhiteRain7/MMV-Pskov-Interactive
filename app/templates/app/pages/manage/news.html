@@ -1,0 +1,82 @@
+{% extends "app/layout.html" %}
+
+{% block links %}{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.news.css' %}" />
+{% endblock %}
+
+{% block scripts %}{% load staticfiles %}
+    <script type="text/javascript" src="{% static 'assets/scripts/scroll-top.js' %}"></script>
+    <script type="text/javascript">
+        window.addEventListener('load', () => {
+            const elements = Object.values(document.getElementsByClassName('delete-button'))
+            
+            elements.forEach(element => {
+                let id = element.value
+
+                element.addEventListener('click', () => {
+                    fetch('/manage/article/' + id, {
+                        method: 'DELETE',
+                        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    }).then(() => {
+                        element.parentElement.parentElement.remove()
+                    })
+                })
+            })
+        })
+    </script>
+{% endblock %}
+
+{% block content %}
+    <section id="manage-container">
+        <section class="manage-section">
+            <h1>Управление новостями</h1>
+
+            <table id="site-news" class="manage-table">    
+                <thead class="composite-head"><tr>
+                    <th>№</th>
+                    <th>Фото</th>
+                    <th>Название</th>
+                    <th>Дата публикации</th>
+                    <th>Игра</th>
+                    <th>Тег</th>
+                    <th></th>
+                </tr></thead>
+    
+                <tbody class="composite-body">
+                    <tr>
+                        <td colspan="7" style="text-align: center;">
+                            <a href="/manage/article/0">создать новую новость</a>
+                        </td>
+                    </tr>
+
+                    {% for article in news %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+    
+                        <td>
+                            <figure class="order-item-figure">
+                                <img src="{{ article.image.url }}" alt="{{ article.title }}" class="order-item-image" />
+                            </figure>
+                        </td>
+
+                        <td><a href="/manage/article/{{ article.id }}">{{ article.title }}</a></td>
+                        <td>{{ article.posted }}</td>
+                        <td><a href="/manage/game/{{ article.about.id }}">{{ article.about.name }}</a></td>
+                        <td>{{ article.tag.tag }}</td>
+                        <td class="delete-td">
+                            <button type="button" class="delete-button" value="{{ article.id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <button type="button" id="manage-scroll-to-top">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="36" height="36"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>
+        </button>
+    </div>
+{% endblock %}

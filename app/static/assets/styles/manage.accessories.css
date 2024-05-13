@@ -1,0 +1,24 @@
+#site-accessories :is(th, td) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#site-accessories :is(th, td):nth-child(1) {
+    width: 60px;
+    text-align: left;
+}
+#site-accessories :is(th, td):nth-child(2) {
+    width: 46px;
+    padding: 0;
+}
+#site-accessories :is(th, td):nth-child(3) {
+    text-align: left;
+}
+
+#site-accessories td > a {
+    color: var(--colour-contrast-decoration-back);
+    text-decoration: none;
+}
+#site-accessories td > a:hover {
+    border-bottom: 1px solid var(--colour-contrast-decoration-back);
+}

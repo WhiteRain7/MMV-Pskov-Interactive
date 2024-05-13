@@ -40,6 +40,18 @@ urlpatterns = [
     path('update/order/<int:id>', views.update_order_status, name='update_order'),
 
     path('manage/', views.manage, name='manage'),
+    path('manage/games/', views.manage_games, name='manage_games'),
+    path('manage/game/<int:id>', views.manage_game, name='manage_game'),
+    path('manage/dlcs/', views.manage_dlcs, name='manage_dlcs'),
+    path('manage/dlc/<int:id>', views.manage_dlc, name='manage_dlc'),
+    path('manage/accessories/', views.manage_accessories, name='manage_accessories'),
+    path('manage/accessory/<int:id>', views.manage_accessory, name='manage_accessory'),
+    path('manage/news/', views.manage_news, name='manage_news'),
+    path('manage/article/<int:id>', views.manage_article, name='manage_article'),
+    path('manage/users/', views.manage_users, name='manage_users'),
+    path('manage/user/<int:id>', views.manage_user, name='manage_user'),
+    path('manage/orders/', views.manage_orders, name='manage_orders'),
+
     path('admin/', admin.site.urls, name='admin')
 ]
 

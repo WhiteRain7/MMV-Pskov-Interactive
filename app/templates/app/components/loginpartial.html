@@ -2,7 +2,7 @@
 
 <a href="{% url 'profile' %}" id="profile">
     <div id="profile-information">
-        <p id="profile-username">{% if user.frist %}{{ user.first }}{% else %}{{ user.username }}{% endif %}</p>
+        <p id="profile-username">{% if user.first %}{{ user.first }}{% else %}{{ user.username }}{% endif %}</p>
         <p id="profile-role">
             {% if user.is_staff or user.is_superuser %}администратор
             {% elif user.is_editor %}редактор

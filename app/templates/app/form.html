@@ -13,7 +13,7 @@
 
 
 {% block content %}
-    <form action="." method="POST" enctype="multipart/form-data" id="form-container" class="regular-block">
+    <form method="POST" enctype="multipart/form-data" id="form-container" class="regular-block">
         {% csrf_token %}
 
         <h1 id="form-title">{% block title %}{% endblock %}</h1>

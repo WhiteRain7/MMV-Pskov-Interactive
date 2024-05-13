@@ -94,6 +94,8 @@ class Game (models.Model):
         db_index = True,
         verbose_name = "Дата публикации"
     )
+    
+    def __str__ (self): return self.name
 
     class Meta:
         db_table = "Games"
@@ -134,6 +136,8 @@ class DLC (models.Model):
         db_index = True,
         verbose_name = "Дата публикации"
     )
+    
+    def __str__ (self): return self.name + ' (DLC)'
 
     class Meta:
         db_table = "DLCs"
@@ -152,6 +156,8 @@ class AccessoryTag (models.Model):
         max_length = 7,
         verbose_name = "Цвет тега товара"
     )
+    
+    def __str__ (self): return '#' + self.tag
 
     class Meta:
         db_table = "AccessoryTags"
@@ -214,6 +220,8 @@ class Accessory (models.Model):
         db_index = True,
         verbose_name = "Дата создания"
     )
+    
+    def __str__ (self): return self.name
 
     class Meta:
         db_table = "Accessories"
@@ -347,7 +355,9 @@ class ArticleTag (models.Model):
         max_length = 7,
         verbose_name = "Цвет тега игры"
     )
-
+    
+    def __str__ (self): return '#' + self.tag
+    
     class Meta:
         db_table = "ArticleTags"
         ordering = [ "tag" ]
@@ -395,8 +405,7 @@ class Article (models.Model):
         verbose_name='Тег'
     )
 
-    def __str__ (self):
-        return self.title
+    def __str__ (self): return self.title
 
     def get_absolute_url (self):
         return reverse("blogpost", args=[str(self.id)])

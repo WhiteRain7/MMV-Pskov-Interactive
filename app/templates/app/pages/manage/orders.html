@@ -2,10 +2,12 @@
 
 {% block links %}{% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/styles/manage.orders.css' %}" />
 {% endblock %}
 
 {% block scripts %}{% load staticfiles %}
-    <script type="text/javascript" src="{% static 'assets/scripts/manage.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/scripts/scroll-top.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assets/scripts/manage-orders.js' %}"></script>
 
     <script type="text/javascript">
         const STATUSES = {{ statuses|safe }};
@@ -24,7 +26,7 @@
         <section class="manage-section">
             <h1>Управление заказами</h1>
 
-            <table id="user-orders">    
+            <table id="user-orders" class="manage-table">    
                 <thead class="composite-head"><tr>
                     <th>№</th>
                     <th>Пользователь</th>

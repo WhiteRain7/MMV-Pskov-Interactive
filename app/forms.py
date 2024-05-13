@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from .models import User, DLC, Accessory, Article, Comment, Order
+from .models import User, Game, DLC, Accessory, Article, Comment, Order
 
 
 class SignInForm (AuthenticationForm):
@@ -88,6 +88,27 @@ class SignUpForm (UserCreationForm):
         fields = ('photo', 'username', 'first', 'last', 'password1', 'password2')
 
 
+class GameForm (forms.ModelForm):
+    class Meta:
+        model = Game
+
+        fields = {
+            'name',
+            'abbreviation',
+            'status',
+            'description',
+            'theatre',
+            'timeline',
+            'timeline_start',
+            'timeline_end',
+            'tag',
+            'colour',
+            'image',
+            'price',
+            'published'
+        }
+
+
 class DLCForm (forms.ModelForm):
     class Meta:
         model = DLC
@@ -145,6 +166,7 @@ class ArticleForm (forms.ModelForm):
             'title',
             'content',
             'tag',
+            'posted',
             'image'
         }
 
@@ -153,6 +175,7 @@ class ArticleForm (forms.ModelForm):
             'title': 'Заголовок',
             'content': 'Полное содержание',
             'tag': 'Тег',
+            'posted': 'Опубликован',
             'image': 'Изображение'
         }
 
